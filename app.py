@@ -209,7 +209,6 @@ def page_connexion():
 
     col1, col2, col3 = st.columns([1, 1.8, 1])
     with col2:
-        # En-tête
         st.markdown(f"""
         <div class="login-wrapper">
             <img src="data:image/jpeg;base64,{logo_b64}" class="card-logo" alt="ATB">
@@ -221,7 +220,6 @@ def page_connexion():
 
         st.markdown("### 👤 Sélectionnez votre profil")
 
-        # 4 boutons profils (2x2)
         col_a, col_b = st.columns(2)
 
         with col_a:
@@ -395,7 +393,7 @@ st.sidebar.markdown("**F1-Score :** 0.94")
 st.sidebar.markdown("**AUC-ROC :** 0.9998")
 
 # ==============================================================
-# PAGE 1 — ACCUEIL
+# PAGE 1 — ACCUEIL (Style ATB)
 # ==============================================================
 if page == "🏠 Accueil":
     import plotly.graph_objects as go
@@ -403,91 +401,172 @@ if page == "🏠 Accueil":
     nom_banquier = st.session_state.get('banquier_nom', 'Utilisateur')
     date_now = datetime.now().strftime("%A %d %B %Y · %H:%M")
 
+    # BANNIÈRE PRINCIPALE
     st.markdown(f"""
-    <div style="background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
-                color: white; padding: 1.5rem 2rem; border-radius: 12px;
-                margin-bottom: 2rem;">
-        <h1 style="margin: 0; color: white;">🛡️ Système de Détection de Fraude</h1>
-        <p style="margin: 0.5rem 0 0 0; font-size: 1.1rem; opacity: 0.95;">
-            👤 Bienvenue <b>{nom_banquier}</b> · 📅 {date_now}
-        </p>
+    <div style="background: linear-gradient(135deg, #8B0000 0%, #A6192E 50%, #6B0000 100%);
+                color: white; padding: 2.5rem 3rem; border-radius: 4px;
+                margin-bottom: 2rem; border-left: 8px solid #FFFFFF;
+                box-shadow: 0 10px 40px rgba(139, 0, 0, 0.3);">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div style="font-size: 3.5rem;">🛡️</div>
+            <div>
+                <h1 style="margin: 0; color: white; font-size: 2.2rem;
+                           letter-spacing: 0.5px; font-weight: 700;">
+                    SYSTÈME DE DÉTECTION DE FRAUDE
+                </h1>
+                <p style="margin: 0.5rem 0 0 0; font-size: 1rem;
+                          color: rgba(255,255,255,0.85); letter-spacing: 2px;
+                          text-transform: uppercase; font-weight: 300;">
+                    Arab Tunisian Bank · Division Sécurité
+                </p>
+            </div>
+        </div>
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem;
+                    border-top: 1px solid rgba(255,255,255,0.2);">
+            <p style="margin: 0; font-size: 1rem; color: rgba(255,255,255,0.95);">
+                👤 <b>{nom_banquier}</b> &nbsp;·&nbsp; 📅 {date_now}
+            </p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
+    # KPI CARDS
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #E8F5F0 0%, #D1EDE1 100%);
-                    padding: 1.5rem; border-radius: 12px; border-left: 5px solid #1D9E75;">
-            <p style="margin: 0; color: #666; font-size: 0.9rem;">📊 DATASET</p>
-            <h2 style="margin: 0.3rem 0; color: #1D9E75; font-size: 2rem;">6.3M</h2>
-            <p style="margin: 0; color: #888; font-size: 0.85rem;">transactions</p>
+        <div style="background: #FFFFFF; padding: 1.5rem; border-radius: 4px;
+                    border-top: 4px solid #8B0000;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.08); height: 100%;">
+            <p style="margin: 0; color: #8B0000; font-size: 0.75rem;
+                      letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
+                DATASET
+            </p>
+            <h2 style="margin: 0.5rem 0; color: #2C2C2C; font-size: 2.2rem;
+                       font-weight: 700;">6.3M</h2>
+            <p style="margin: 0; color: #888; font-size: 0.85rem;">transactions analysées</p>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #FFF4E5 0%, #FFE4C4 100%);
-                    padding: 1.5rem; border-radius: 12px; border-left: 5px solid #EF9F27;">
-            <p style="margin: 0; color: #666; font-size: 0.9rem;">🎯 F1-SCORE</p>
-            <h2 style="margin: 0.3rem 0; color: #EF9F27; font-size: 2rem;">0.94</h2>
+        <div style="background: #FFFFFF; padding: 1.5rem; border-radius: 4px;
+                    border-top: 4px solid #A6192E;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.08); height: 100%;">
+            <p style="margin: 0; color: #A6192E; font-size: 0.75rem;
+                      letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
+                F1-SCORE
+            </p>
+            <h2 style="margin: 0.5rem 0; color: #2C2C2C; font-size: 2.2rem;
+                       font-weight: 700;">0.94</h2>
             <p style="margin: 0; color: #888; font-size: 0.85rem;">vs baseline 0.07</p>
         </div>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #E8F0FA 0%, #D1E0F5 100%);
-                    padding: 1.5rem; border-radius: 12px; border-left: 5px solid #378ADD;">
-            <p style="margin: 0; color: #666; font-size: 0.9rem;">📈 AUC-ROC</p>
-            <h2 style="margin: 0.3rem 0; color: #378ADD; font-size: 2rem;">0.9998</h2>
+        <div style="background: #FFFFFF; padding: 1.5rem; border-radius: 4px;
+                    border-top: 4px solid #2C2C2C;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.08); height: 100%;">
+            <p style="margin: 0; color: #2C2C2C; font-size: 0.75rem;
+                      letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
+                AUC-ROC
+            </p>
+            <h2 style="margin: 0.5rem 0; color: #2C2C2C; font-size: 2.2rem;
+                       font-weight: 700;">0.9998</h2>
             <p style="margin: 0; color: #888; font-size: 0.85rem;">quasi-parfait</p>
         </div>
         """, unsafe_allow_html=True)
 
     with col4:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #FCE8E8 0%, #F5D1D1 100%);
-                    padding: 1.5rem; border-radius: 12px; border-left: 5px solid #8B0000;">
-            <p style="margin: 0; color: #666; font-size: 0.9rem;">🚨 DÉTECTION</p>
-            <h2 style="margin: 0.3rem 0; color: #8B0000; font-size: 2rem;">99.8%</h2>
-            <p style="margin: 0; color: #888; font-size: 0.85rem;">des fraudes</p>
+        <div style="background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%);
+                    padding: 1.5rem; border-radius: 4px;
+                    box-shadow: 0 4px 15px rgba(139,0,0,0.3); height: 100%;">
+            <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.75rem;
+                      letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
+                DÉTECTION
+            </p>
+            <h2 style="margin: 0.5rem 0; color: #FFFFFF; font-size: 2.2rem;
+                       font-weight: 700;">99.8%</h2>
+            <p style="margin: 0; color: rgba(255,255,255,0.75); font-size: 0.85rem;">des fraudes</p>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # MODÈLE + RÉPARTITION
     col_left, col_right = st.columns(2)
 
     with col_left:
-        st.markdown("### 🏆 Modèle Champion")
+        st.markdown("""
+        <h3 style="color: #8B0000; border-bottom: 2px solid #8B0000;
+                   padding-bottom: 0.5rem; margin-bottom: 1rem;">
+            🏆 MODÈLE CHAMPION
+        </h3>
+        """, unsafe_allow_html=True)
+
         st.markdown("""
         <div style="background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%);
-                    color: white; padding: 2rem; border-radius: 12px;">
-            <h2 style="color: white; margin: 0;">🌲 Random Forest</h2>
-            <p style="color: rgba(255,255,255,0.8); margin: 0.5rem 0 1.5rem 0;">
-                Meilleur parmi 5 modèles testés
-            </p>
-            <table style="width: 100%; color: white;">
-                <tr><td>F1-Score</td><td style="text-align:right;"><b>0.94</b></td></tr>
-                <tr><td>AUC-ROC</td><td style="text-align:right;"><b>0.9998</b></td></tr>
-                <tr><td>Recall</td><td style="text-align:right;"><b>100%</b></td></tr>
-                <tr><td>Precision</td><td style="text-align:right;"><b>90%</b></td></tr>
+                    color: white; padding: 2rem; border-radius: 4px;
+                    border-left: 6px solid #FFFFFF;
+                    box-shadow: 0 10px 30px rgba(139,0,0,0.3);">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2.5rem;">🌲</span>
+                <div>
+                    <h2 style="color: white; margin: 0; font-size: 1.6rem;
+                               font-weight: 700;">Random Forest</h2>
+                    <p style="color: rgba(255,255,255,0.7); margin: 0;
+                              font-size: 0.85rem; letter-spacing: 1px;">
+                        MEILLEUR PARMI 5 MODÈLES TESTÉS
+                    </p>
+                </div>
+            </div>
+            <table style="width: 100%; color: white; margin-top: 1rem;">
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.15);">
+                    <td style="padding: 0.6rem 0;">F1-Score</td>
+                    <td style="text-align:right; padding: 0.6rem 0;">
+                        <b style="font-size: 1.1rem;">0.94</b>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.15);">
+                    <td style="padding: 0.6rem 0;">AUC-ROC</td>
+                    <td style="text-align:right; padding: 0.6rem 0;">
+                        <b style="font-size: 1.1rem;">0.9998</b>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.15);">
+                    <td style="padding: 0.6rem 0;">Recall</td>
+                    <td style="text-align:right; padding: 0.6rem 0;">
+                        <b style="font-size: 1.1rem;">100%</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.6rem 0;">Precision</td>
+                    <td style="text-align:right; padding: 0.6rem 0;">
+                        <b style="font-size: 1.1rem;">90%</b>
+                    </td>
+                </tr>
             </table>
         </div>
         """, unsafe_allow_html=True)
 
     with col_right:
-        st.markdown("###  Répartition du Dataset")
+        st.markdown("""
+        <h3 style="color: #8B0000; border-bottom: 2px solid #8B0000;
+                   padding-bottom: 0.5rem; margin-bottom: 1rem;">
+            📊 RÉPARTITION DU DATASET
+        </h3>
+        """, unsafe_allow_html=True)
 
         fig = go.Figure(data=[go.Pie(
             labels=['✅ Légitimes', '🚨 Fraudes'],
             values=[6354407, 8213],
             hole=0.65,
-            marker=dict(colors=['#1D9E75', '#8B0000']),
+            marker=dict(colors=['#2C2C2C', '#8B0000'],
+                        line=dict(color='#FFFFFF', width=2)),
             textinfo='label+percent',
-            textfont=dict(size=13),
+            textfont=dict(size=13, family="Arial"),
             hovertemplate='<b>%{label}</b><br>%{value:,} transactions<br>%{percent}<extra></extra>'
         )])
 
@@ -498,37 +577,51 @@ if page == "🏠 Accueil":
             legend=dict(orientation="h", yanchor="bottom", y=-0.1,
                         xanchor="center", x=0.5),
             annotations=[dict(
-                text='<b>0.13%</b><br><span style="font-size:10px">fraudes</span>',
+                text='<b style="color:#8B0000;">0.13%</b><br>'
+                     '<span style="font-size:10px;">fraudes</span>',
                 x=0.5, y=0.5, font_size=18, showarrow=False
-            )]
+            )],
+            paper_bgcolor='white',
+            plot_bgcolor='white'
         )
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")
 
-    st.markdown("### 📊 Top 5 Features Importantes")
-    st.caption("Ces features contribuent le plus à la détection des fraudes")
+    # TOP 5 FEATURES
+    st.markdown("""
+    <h3 style="color: #8B0000; border-bottom: 2px solid #8B0000;
+               padding-bottom: 0.5rem; margin-bottom: 1rem;">
+        📊 TOP 5 FEATURES IMPORTANTES
+    </h3>
+    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
+        Ces variables contribuent le plus à la détection des fraudes
+    </p>
+    """, unsafe_allow_html=True)
 
     features = ['errorBalanceOrig', 'amountRatio', 'newbalanceOrig',
                 'nb_tx_step', 'amount']
     importances = [0.349, 0.253, 0.134, 0.075, 0.050]
-    colors = ['#8B0000', '#A50000', '#C20000', '#D94545', '#E88B8B']
+    colors = ['#8B0000', '#A6192E', '#C42B47', '#D94545', '#E88B8B']
 
     fig = go.Figure(go.Bar(
         x=importances,
         y=features,
         orientation='h',
-        marker=dict(color=colors),
+        marker=dict(color=colors, line=dict(color='white', width=1)),
         text=[f'{v*100:.1f}%' for v in importances],
         textposition='outside',
+        textfont=dict(color='#2C2C2C', size=12, family="Arial"),
         hovertemplate='<b>%{y}</b><br>Importance: %{x:.3f}<br>(%{text})<extra></extra>'
     ))
 
     fig.update_layout(
         height=350,
         margin=dict(t=20, b=20, l=20, r=60),
-        xaxis=dict(title='Importance', showgrid=True, gridcolor='#eee'),
-        yaxis=dict(autorange='reversed'),
+        xaxis=dict(title='', showgrid=True, gridcolor='#eee',
+                   tickfont=dict(color='#2C2C2C')),
+        yaxis=dict(autorange='reversed',
+                   tickfont=dict(color='#2C2C2C', size=13)),
         plot_bgcolor='white',
         paper_bgcolor='white'
     )
@@ -536,8 +629,16 @@ if page == "🏠 Accueil":
 
     st.markdown("---")
 
-    st.markdown("### 📈 Activité Récente")
-    st.caption("Les 5 dernières transactions analysées")
+    # ACTIVITÉ RÉCENTE
+    st.markdown("""
+    <h3 style="color: #8B0000; border-bottom: 2px solid #8B0000;
+               padding-bottom: 0.5rem; margin-bottom: 1rem;">
+        📈 ACTIVITÉ RÉCENTE
+    </h3>
+    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
+        Les 5 dernières transactions analysées
+    </p>
+    """, unsafe_allow_html=True)
 
     df_hist = get_history()
 
@@ -548,20 +649,32 @@ if page == "🏠 Accueil":
         df_recent = df_hist.head(5).copy()
         for _, row in df_recent.iterrows():
             is_fraud = row['is_fraud'] == 1
-            color = '#8B0000' if is_fraud else '#1D9E75'
-            bg = '#FCE8E8' if is_fraud else '#E8F5F0'
+            color = '#8B0000' if is_fraud else '#2C2C2C'
+            bg = '#FFF5F5' if is_fraud else '#F8F8F8'
+            border = '#8B0000' if is_fraud else '#2C2C2C'
             icon = '🚨' if is_fraud else '✅'
             statut = 'FRAUDE' if is_fraud else 'LÉGITIME'
 
             st.markdown(f"""
-            <div style="background: {bg}; padding: 1rem 1.5rem; border-radius: 10px;
-                        margin-bottom: 0.8rem; border-left: 4px solid {color};
+            <div style="background: {bg}; padding: 1rem 1.5rem; border-radius: 4px;
+                        margin-bottom: 0.8rem; border-left: 5px solid {border};
                         display: flex; justify-content: space-between;
-                        align-items: center;">
-                <div><b>{icon} {statut}</b> · {row['transaction_type']}</div>
+                        align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <div>
+                    <b style="color: {color}; letter-spacing: 1px; font-size: 0.85rem;">
+                        {icon} {statut}
+                    </b>
+                    <span style="color: #666; margin-left: 1rem;">
+                        {row['transaction_type']}
+                    </span>
+                </div>
                 <div style="text-align: right;">
-                    <b>{row['amount']:,.2f} €</b><br>
-                    <small style="color: #888;">{row['timestamp'][:16].replace('T', ' ')}</small>
+                    <b style="color: #2C2C2C; font-size: 1.1rem;">
+                        {row['amount']:,.2f} €
+                    </b><br>
+                    <small style="color: #888;">
+                        {row['timestamp'][:16].replace('T', ' ')}
+                    </small>
                 </div>
             </div>
             """, unsafe_allow_html=True)
