@@ -6,7 +6,7 @@
 *.db
 
 # Données volumineuses
-data/
+data/*
 *.csv
 *.zip
 
@@ -25,3 +25,8 @@ utils/notifications_backup.py
 
 # Config VS Code locale
 .vscode/
+
+# ══════════════════════════════════════════════════════════════
+# EXCEPTIONS — À METTRE EN DERNIER (règle la plus spécifique)
+# ══════════════════════════════════════════════════════════════
+!data/paysim_sample.csv

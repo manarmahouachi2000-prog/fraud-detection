@@ -5,9 +5,9 @@ import pandas as pd
 import streamlit as st
 import os
 
-# Chemin du dataset
-DATASET_PATH = r"C:\Users\mahouachi\OneDrive\Desktop\fraud detection\data\PS_20174392719_1491204439457_log.csv"
-
+# Chemin du dataset (relatif : fonctionne en local ET sur Streamlit Cloud)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATASET_PATH = os.path.join(BASE_DIR, "data", "paysim_sample.csv")
 
 @st.cache_data(show_spinner=False)
 def charger_dataset(nrows=100000):
