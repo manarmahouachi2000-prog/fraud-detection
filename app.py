@@ -115,7 +115,7 @@ def verifier_banquier(email):
     return False, None
 
 def page_connexion():
-    """Page de connexion — design moderne ATB."""
+    """Page de connexion — sélection de profil."""
     try:
         with open("atb_background.jpg", "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
@@ -125,7 +125,7 @@ def page_connexion():
     st.markdown("""
     <style>
         .stApp {
-            background: 
+            background:
                 radial-gradient(circle at 20% 30%, #8B0000 0%, transparent 45%),
                 radial-gradient(circle at 80% 20%, #1D9E75 0%, transparent 45%),
                 radial-gradient(circle at 75% 80%, #6B0000 0%, transparent 45%),
@@ -135,13 +135,12 @@ def page_connexion():
         }
         header[data-testid="stHeader"] { background: transparent; }
         .login-wrapper {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
-            padding: 2.5rem 3rem;
+            padding: 2rem 3rem 1rem 3rem;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
-            max-width: 480px;
+            max-width: 520px;
             margin: 2rem auto 1rem auto;
             border: 1px solid rgba(255, 255, 255, 0.6);
         }
@@ -149,7 +148,6 @@ def page_connexion():
             display: block;
             margin: 0 auto 1.5rem auto;
             width: 130px;
-            height: auto;
         }
         .card-title {
             text-align: center;
@@ -163,32 +161,41 @@ def page_connexion():
             color: #666;
             font-size: 0.95rem;
             margin: 0 0 1rem 0;
-            font-weight: 500;
         }
         .card-divider {
             height: 3px;
             background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
-            border: none;
             border-radius: 2px;
             margin: 1.5rem 0;
             opacity: 0.7;
         }
-        .stButton > button {
-            width: 100%;
-            background: linear-gradient(90deg, #8B0000 0%, #6B0000 100%);
+        .security-note {
+            text-align: center;
+            color: #888;
+            font-size: 0.82rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #ddd;
+        }
+        div[data-testid="stButton"] > button {
+            background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%);
             color: white !important;
             font-weight: 600;
-            padding: 0.9rem;
+            padding: 1.2rem 1rem;
             border: none;
-            border-radius: 12px;
-            font-size: 1.05rem;
+            border-radius: 14px;
+            font-size: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.35);
+            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.25);
+            min-height: 100px;
+            white-space: pre-line;
+            line-height: 1.4;
         }
-        .stButton > button:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(90deg, #6B0000 0%, #8B0000 100%);
+        div[data-testid="stButton"] > button:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #6B0000 0%, #8B0000 100%);
             box-shadow: 0 10px 30px rgba(139, 0, 0, 0.5);
+            color: white !important;
         }
         .stTextInput > div > div > input {
             border-radius: 12px !important;
@@ -197,23 +204,12 @@ def page_connexion():
             font-size: 1rem !important;
             background: white !important;
         }
-        .stTextInput > div > div > input:focus {
-            border-color: #8B0000 !important;
-            box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.12) !important;
-        }
-        .security-note {
-            text-align: center;
-            color: #888;
-            font-size: 0.82rem;
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px dashed #ddd;
-        }
     </style>
     """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1, 1.6, 1])
+    col1, col2, col3 = st.columns([1, 1.8, 1])
     with col2:
+        # En-tête
         st.markdown(f"""
         <div class="login-wrapper">
             <img src="data:image/jpeg;base64,{logo_b64}" class="card-logo" alt="ATB">
@@ -223,33 +219,75 @@ def page_connexion():
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("**Saisissez votre adresse email professionnelle.**")
+        st.markdown("### 👤 Sélectionnez votre profil")
 
-        email = st.text_input("📧 Adresse email",
-                              placeholder="prenom.nom@atb.com.tn",
-                              key="login_email")
+        # 4 boutons profils (2x2)
+        col_a, col_b = st.columns(2)
 
-        if st.button("🚀 Se connecter", use_container_width=True):
-            if not email or "@" not in email:
-                st.error("❌ Veuillez saisir une adresse email valide.")
-            else:
-                ok, nom = verifier_banquier(email)
+        with col_a:
+            if st.button("👤  Banquier\n\nAccès complet",
+                         use_container_width=True,
+                         key="btn_banquier"):
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = "banquier@atb.com.tn"
+                st.session_state['banquier_nom'] = "Banquier ATB"
+                st.session_state['role'] = "banquier"
+                log_connexion("banquier@atb.com.tn", "Banquier ATB", "connexion")
+                st.rerun()
+
+            if st.button("🎓  Recruteur\n\nMode démo",
+                         use_container_width=True,
+                         key="btn_recruteur"):
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = "recruteur@demo.tn"
+                st.session_state['banquier_nom'] = "Recruteur"
+                st.session_state['role'] = "recruteur"
+                log_connexion("recruteur@demo.tn", "Recruteur", "connexion")
+                st.rerun()
+
+        with col_b:
+            if st.button("🔍  Analyste\n\nLecture seule",
+                         use_container_width=True,
+                         key="btn_analyste"):
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = "analyste@atb.com.tn"
+                st.session_state['banquier_nom'] = "Analyste ATB"
+                st.session_state['role'] = "analyste"
+                log_connexion("analyste@atb.com.tn", "Analyste ATB", "connexion")
+                st.rerun()
+
+            if st.button("🎯  Démo rapide\n\nSans compte",
+                         use_container_width=True,
+                         key="btn_demo"):
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = "demo@atb.com.tn"
+                st.session_state['banquier_nom'] = "Invité"
+                st.session_state['role'] = "demo"
+                log_connexion("demo@atb.com.tn", "Invité", "connexion")
+                st.rerun()
+
+        st.markdown(
+            '<p class="security-note">🔒 Connexion sécurisée · '
+            'Toutes les sessions sont enregistrées</p>',
+            unsafe_allow_html=True
+        )
+
+        with st.expander("🔐 Connexion administrateur"):
+            email_admin = st.text_input("Email administrateur",
+                                         placeholder="admin@atb.com.tn",
+                                         key="admin_email")
+            if st.button("Se connecter", use_container_width=True):
+                ok, nom = verifier_banquier(email_admin)
                 if ok:
                     st.session_state['logged_in'] = True
-                    st.session_state['banquier_email'] = email
+                    st.session_state['banquier_email'] = email_admin
                     st.session_state['banquier_nom'] = nom
-                    log_connexion(email, nom, "connexion")
+                    st.session_state['role'] = "admin"
+                    log_connexion(email_admin, nom, "connexion")
                     st.success(f"✅ Bienvenue {nom} !")
-                    st.balloons()
                     st.rerun()
                 else:
                     st.error("❌ Accès refusé — Email non autorisé.")
-                    st.caption("Contactez votre administrateur.")
-
-        st.markdown(
-            '<p class="security-note">🔒 Connexion sécurisée · Toutes les tentatives sont enregistrées</p>',
-            unsafe_allow_html=True
-        )
 
 # ==============================================================
 # FEATURE ENGINEERING
@@ -309,7 +347,16 @@ except Exception:
 st.sidebar.title("🛡️ Détection de Fraude")
 st.sidebar.markdown("---")
 
-st.sidebar.success(f"👤 **{st.session_state.get('banquier_nom', 'Utilisateur')}**")
+role = st.session_state.get('role', 'invite')
+role_icons = {
+    "banquier":  "👤 Banquier",
+    "analyste":  "🔍 Analyste",
+    "recruteur": "🎓 Recruteur",
+    "demo":      "🎯 Démo",
+    "admin":     "👑 Admin",
+}
+
+st.sidebar.success(f"{role_icons.get(role, '👤')} **{st.session_state.get('banquier_nom', 'Utilisateur')}**")
 st.sidebar.caption(f"📧 {st.session_state.get('banquier_email', '')}")
 
 if st.sidebar.button("🚪 Se déconnecter", use_container_width=True):
