@@ -10,7 +10,11 @@ import joblib
 import sqlite3
 import matplotlib.pyplot as plt
 import base64
+import os
 from datetime import datetime
+
+# Chemin base de données : /tmp sur Streamlit Cloud, dossier local sinon
+DB_PATH = "/tmp/fraude.db" if os.path.exists("/tmp") else "fraude.db"
 
 # ==============================================================
 # CONFIGURATION
@@ -27,7 +31,8 @@ st.set_page_config(
 # ==============================================================
 @st.cache_resource
 def load_model():
-    path = r"C:\Users\mahouachi\OneDrive\Desktop\fraud detection\Models\random_forest_model.pkl"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(base_dir, "Models", "random_forest_model.pkl")
     return joblib.load(path)
 
 model = load_model()
@@ -36,7 +41,7 @@ model = load_model()
 # BASE DE DONNÉES
 # ==============================================================
 def init_db():
-    conn = sqlite3.connect("fraude.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS predictions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,7 +57,7 @@ def init_db():
     conn.close()
 
 def init_users_db():
-    conn = sqlite3.connect("fraude.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS sessions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,7 +71,7 @@ def init_users_db():
     conn.close()
 
 def log_connexion(email, nom, action="connexion"):
-    conn = sqlite3.connect("fraude.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.execute("""
         INSERT INTO sessions (email, nom, timestamp, action)
         VALUES (?, ?, ?, ?)
@@ -75,7 +80,7 @@ def log_connexion(email, nom, action="connexion"):
     conn.close()
 
 def save_prediction(tx_type, amount, is_fraud, prob, risk):
-    conn = sqlite3.connect("fraude.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.execute("""
         INSERT INTO predictions
         (timestamp, transaction_type, amount, is_fraud, fraud_probability, risk_score)
@@ -85,13 +90,13 @@ def save_prediction(tx_type, amount, is_fraud, prob, risk):
     conn.close()
 
 def get_history():
-    conn = sqlite3.connect("fraude.db")
+    conn = sqlite3.connect(DB_PATH)
     df = pd.read_sql("SELECT * FROM predictions ORDER BY id DESC LIMIT 50", conn)
     conn.close()
     return df
 
 def get_stats():
-    conn = sqlite3.connect("fraude.db")
+    conn = sqlite3.connect(DB_PATH)
     df = pd.read_sql("SELECT * FROM predictions", conn)
     conn.close()
     return df
@@ -341,6 +346,7 @@ st.sidebar.markdown("**Modèle :** Random Forest")
 st.sidebar.markdown("**Dataset :** PaySim 6.3M")
 st.sidebar.markdown("**F1-Score :** 0.94")
 st.sidebar.markdown("**AUC-ROC :** 0.9998")
+
 # ==============================================================
 # PAGE 1 — ACCUEIL
 # ==============================================================
@@ -738,7 +744,8 @@ elif page == "🔍 Analyser une transaction":
                             with st.expander("📄 Voir le contenu de l'email"):
                                 st.markdown("**📧 Email banquier :**")
                                 st.code(resultats['email_banquier']['contenu'])
-                                # ==============================================================
+
+# ==============================================================
 # PAGE 3 — ANALYSE BATCH CSV
 # ==============================================================
 elif page == "📁 Analyse batch CSV":
@@ -948,4 +955,3 @@ elif page == "📬 Notifications":
         st.markdown(f"**Date :** {notif['timestamp']}")
         st.markdown("**Message :**")
         st.code(notif['message'])
-                    

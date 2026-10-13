@@ -9,7 +9,7 @@ import sqlite3
 from datetime import datetime
 import yagmail
 import streamlit as st
-
+import os     
 # ══════════════════════════════════════════════════════════════
 # CONFIGURATION EMAIL — REMPLACEZ CES 2 VALEURS !
 # ══════════════════════════════════════════════════════════════
@@ -17,7 +17,8 @@ EMAIL_EXPEDITEUR   = "manarmahouachi2000@gmail.com"
 EMAIL_MOT_DE_PASSE = "xefx ytir mzqo ahhy"
 
 MODE_SIMULATION = False   # ← False = envoi RÉEL
-DB_PATH = "fraude.db"
+import os
+DB_PATH = "/tmp/fraude.db" if os.path.exists("/tmp") else "fraude.db"
 
 # ══════════════════════════════════════════════════════════════
 # BASE DE DONNÉES
