@@ -1,0 +1,27 @@
+# Secrets et configuration locale
+.env
+.streamlit/secrets.toml
+
+# Base de données locale
+*.db
+
+# Données volumineuses
+data/
+*.csv
+*.zip
+
+# Fichiers temporaires
+__pycache__/
+.ipynb_checkpoints/
+
+# Sauvegardes et tests locaux
+app_backup_*.py
+app_sauvegarde.py
+test_email.py
+clean.py
+
+# Sauvegarde dans utils
+utils/notifications_backup.py
+
+# Config VS Code locale
+.vscode/
