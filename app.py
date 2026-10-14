@@ -453,7 +453,7 @@ def page_connexion():
     st.markdown('</div>', unsafe_allow_html=True)
 
     # ============ BOUTONS PROFILS (à droite) ============
-    col_spacer1, col_btn, col_spacer2 = st.columns([1.2, 1, 0])
+    col_spacer1, col_btn, col_spacer2 = st.columns([1.2, 1, 1])
 
     with col_btn:
         st.markdown("### 👤 Sélectionnez votre profil")
