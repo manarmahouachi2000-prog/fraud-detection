@@ -115,8 +115,8 @@ def verifier_banquier(email):
     return False, None
 
 def page_connexion():
-    """Page de connexion — design ATB corporate."""
-    # Charger les 2 images (logo + bâtiment)
+    """Page de connexion — design ATB corporate v2."""
+    # Charger les images
     try:
         with open("atb_background.jpg", "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
@@ -129,161 +129,20 @@ def page_connexion():
     except Exception:
         building_b64 = ""
 
-    # CSS + Design
-    st.markdown(f"""
+    # CSS global
+    st.markdown("""
     <style>
-        /* Fond général */
-        .stApp {{
-            background: #F5F7FA;
-        }}
-        header[data-testid="stHeader"] {{ background: transparent; }}
+        .stApp { background: #F5F7FA; }
+        header[data-testid="stHeader"] { background: transparent; }
 
-        /* Cacher la sidebar sur la page de connexion */
-        section[data-testid="stSidebar"] {{
-            display: none !important;
-        }}
+        section[data-testid="stSidebar"] { display: none !important; }
 
-        /* Conteneur principal */
-        .login-container {{
-            display: flex;
-            min-height: 85vh;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
-            margin: 1rem 0;
-        }}
+        /* Cacher complètement le menu Streamlit */
+        #MainMenu { visibility: hidden; }
+        footer { visibility: hidden; }
 
-        /* Côté gauche — Image du bâtiment */
-        .login-left {{
-            flex: 1.2;
-            background-image: url("data:image/jpeg;base64,{building_b64}");
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 2rem;
-        }}
-        .login-left::before {{
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(74,0,0,0.5) 0%, rgba(139,0,0,0.4) 100%);
-            z-index: 1;
-        }}
-        .login-left > * {{
-            position: relative;
-            z-index: 2;
-        }}
-        .atb-brand-left {{
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }}
-        .atb-brand-logo {{
-            background: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 800;
-            color: #8B0000;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-        }}
-        .atb-brand-name {{
-            color: white;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            font-weight: 500;
-        }}
-        .login-left-bottom {{
-            color: white;
-        }}
-        .login-left-bottom p {{
-            margin: 0;
-            font-size: 1rem;
-            line-height: 1.6;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-        }}
-
-        /* Côté droit — Carte de connexion */
-        .login-right {{
-            flex: 1;
-            background: linear-gradient(135deg, #6B0000 0%, #8B0000 50%, #4A0000 100%);
-            padding: 3rem 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }}
-        .login-right::before {{
-            content: '';
-            position: absolute;
-            top: -20%; right: -20%;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            border-radius: 50%;
-        }}
-        .login-right::after {{
-            content: '';
-            position: absolute;
-            bottom: -30%; left: -10%;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-            border-radius: 50%;
-        }}
-
-        /* Carte blanche centrale */
-        .login-card {{
-            background: white;
-            border-radius: 16px;
-            padding: 2rem 2rem;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }}
-        .login-card-logo {{
-            width: 100px;
-            margin: 0 auto 1rem auto;
-            display: block;
-        }}
-        .login-card-title {{
-            color: #8B0000;
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin: 0.5rem 0;
-            line-height: 1.3;
-        }}
-        .login-card-subtitle {{
-            color: #888;
-            font-size: 0.8rem;
-            margin-bottom: 1.5rem;
-        }}
-        .login-card-divider {{
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
-            border-radius: 2px;
-            margin: 1rem auto;
-        }}
-        .login-card-hint {{
-            background: #FFF5F5;
-            border-left: 3px solid #8B0000;
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
-            margin: 1rem 0;
-            text-align: left;
-            font-size: 0.85rem;
-            color: #666;
-        }}
-
-        /* Boutons profils */
-        div[data-testid="stButton"] > button {{
+        /* Boutons stylisés ATB */
+        div[data-testid="stButton"] > button {
             width: 100% !important;
             background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%) !important;
             color: white !important;
@@ -297,86 +156,72 @@ def page_connexion():
             white-space: pre-line !important;
             line-height: 1.3 !important;
             text-align: center !important;
-            margin-bottom: 0.5rem !important;
-        }}
-        div[data-testid="stButton"] > button:hover {{
+            margin-bottom: 0.4rem !important;
+        }
+        div[data-testid="stButton"] > button:hover {
             transform: translateY(-2px) !important;
             background: linear-gradient(135deg, #A6192E 0%, #8B0000 100%) !important;
             box-shadow: 0 8px 20px rgba(139,0,0,0.5) !important;
             color: white !important;
-        }}
-
-        /* Réduire l'espacement dans la carte */
-        .login-card div[data-testid="stVerticalBlock"] {{
-            gap: 0.5rem;
-        }}
-
-        /* Input admin */
-        .stTextInput > div > div > input {{
-            border-radius: 8px !important;
-            border: 2px solid #e0e0e0 !important;
-            padding: 0.7rem 1rem !important;
-            font-size: 0.9rem !important;
-        }}
-        .stTextInput > div > div > input:focus {{
-            border-color: #8B0000 !important;
-            box-shadow: 0 0 0 3px rgba(139,0,0,0.1) !important;
-        }}
-
-        /* Expander admin */
-        .streamlit-expanderHeader {{
-            background: #F8F8F8 !important;
-            border-radius: 8px !important;
-            font-size: 0.85rem !important;
-            color: #666 !important;
-        }}
-
-        /* Responsive */
-        @media (max-width: 900px) {{
-            .login-left {{ display: none; }}
-            .login-right {{ flex: 1; padding: 1.5rem; }}
-        }}
+        }
     </style>
     """, unsafe_allow_html=True)
 
-    # Layout
-    st.markdown('<div class="login-container">', unsafe_allow_html=True)
+    # Layout principal : 3 zones
+    col_left, col_center, col_right = st.columns([1.2, 1.8, 1.2])
 
-    col_left, col_right = st.columns([1.2, 1])
-
-    # ============ GAUCHE : IMAGE + SLOGAN ============
+    # ========== GAUCHE : IMAGE BÂTIMENT + SLOGAN ==========
     with col_left:
         st.markdown(f"""
-        <div style="background-image: url('data:image/jpeg;base64,{building_b64}');
-                    background-size: cover;
-                    background-position: center;
-                    height: 700px;
-                    border-radius: 20px 0 0 20px;
-                    position: relative;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    padding: 2rem;
-                    overflow: hidden;">
-            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-                        background: linear-gradient(135deg, rgba(74,0,0,0.55) 0%, rgba(139,0,0,0.35) 100%);
-                        z-index: 1;"></div>
-            <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 1rem;">
-                <div style="background: white; padding: 8px 14px; border-radius: 6px;
-                            font-weight: 800; color: #8B0000; font-size: 1.3rem;
-                            letter-spacing: 1px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-                    ATB
-                </div>
-                <div style="color: white; font-size: 0.7rem; letter-spacing: 2px;
-                            font-weight: 500; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">
-                    ARAB TUNISIAN BANK
-                </div>
+        <div style="
+            background-image: linear-gradient(135deg, rgba(74,0,0,0.65) 0%, rgba(139,0,0,0.45) 100%),
+                              url('data:image/jpeg;base64,{building_b64}');
+            background-size: cover;
+            background-position: center;
+            height: 720px;
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        ">
+            <!-- Logo ATB en haut -->
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <div style="
+                    background: white;
+                    padding: 8px 14px;
+                    border-radius: 6px;
+                    font-weight: 900;
+                    color: #8B0000;
+                    font-size: 1.4rem;
+                    letter-spacing: 1px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+                ">ATB</div>
+                <div style="
+                    color: white;
+                    font-size: 0.7rem;
+                    letter-spacing: 2px;
+                    font-weight: 600;
+                    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+                ">ARAB TUNISIAN BANK</div>
             </div>
-            <div style="position: relative; z-index: 2; color: white;">
-                <div style="width: 40px; height: 3px; background: white;
-                            margin-bottom: 1rem; border-radius: 2px;"></div>
-                <p style="margin: 0; font-size: 1.1rem; line-height: 1.5;
-                          font-weight: 500; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">
+
+            <!-- Slogan en bas -->
+            <div style="color: white;">
+                <div style="
+                    width: 45px; height: 3px;
+                    background: white;
+                    border-radius: 2px;
+                    margin-bottom: 1rem;
+                "></div>
+                <p style="
+                    margin: 0;
+                    font-size: 1.15rem;
+                    line-height: 1.5;
+                    font-weight: 500;
+                    text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+                ">
                     Votre confiance<br>
                     est notre plus grande<br>
                     sécurité
@@ -385,74 +230,135 @@ def page_connexion():
         </div>
         """, unsafe_allow_html=True)
 
-    # ============ DROITE : CARTE DE CONNEXION ============
-    with col_right:
+    # ========== CENTRE : CARTE DE CONNEXION ==========
+    with col_center:
         st.markdown(f"""
-        <div style="background: linear-gradient(135deg, #6B0000 0%, #8B0000 50%, #4A0000 100%);
-                    border-radius: 0 20px 20px 0;
-                    height: 700px;
-                    padding: 2rem;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    position: relative;
-                    overflow: hidden;">
-            <div style="position: absolute; top: -20%; right: -20%;
-                        width: 400px; height: 400px;
-                        background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
-                        border-radius: 50%;"></div>
-            <div style="position: absolute; bottom: -30%; left: -20%;
-                        width: 500px; height: 500px;
-                        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-                        border-radius: 50%;"></div>
-            <div style="background: white; border-radius: 16px;
-                        padding: 2rem; width: 100%; max-width: 400px;
-                        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-                        position: relative; z-index: 2;
-                        text-align: center;">
+        <div style="
+            background: white;
+            border-radius: 16px;
+            padding: 2rem 1.8rem;
+            height: 720px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+        ">
+            <img src="data:image/jpeg;base64,{logo_b64}"
+                 style="width: 90px; margin-bottom: 0.5rem;">
 
-                <img src="data:image/jpeg;base64,{logo_b64}"
-                     style="width: 90px; margin: 0 auto 0.5rem auto; display: block;">
+            <h1 style="
+                color: #8B0000;
+                font-size: 1.5rem;
+                font-weight: 800;
+                margin: 0.3rem 0;
+                line-height: 1.3;
+                font-family: Arial, sans-serif;
+            ">
+                Système de<br>Détection de Fraude
+            </h1>
 
-                <h1 style="color: #8B0000; font-size: 1.5rem; font-weight: 800;
-                           margin: 0.5rem 0; line-height: 1.3;">
-                    Système de<br>Détection de Fraude
-                </h1>
+            <p style="
+                color: #888;
+                font-size: 0.75rem;
+                margin: 0.3rem 0 0.8rem 0;
+                font-family: Arial, sans-serif;
+            ">
+                Arab Tunisian Bank — Espace Sécurisé
+            </p>
 
-                <p style="color: #888; font-size: 0.8rem; margin: 0.5rem 0 0 0;">
-                    Arab Tunisian Bank — Espace Sécurisé
+            <div style="
+                width: 60px;
+                height: 3px;
+                background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
+                border-radius: 2px;
+                margin: 0.5rem auto 1rem auto;
+            "></div>
+
+            <div style="
+                background: #FFF5F5;
+                border-left: 3px solid #8B0000;
+                border-radius: 8px;
+                padding: 0.7rem 1rem;
+                margin: 0.3rem 0 1.2rem 0;
+                width: 100%;
+                text-align: left;
+            ">
+                <p style="margin: 0; font-size: 0.8rem; color: #8B0000; font-weight: 700;">
+                    👤 Bienvenue
                 </p>
-
-                <div style="width: 60px; height: 3px;
-                            background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
-                            border-radius: 2px; margin: 1.2rem auto;"></div>
-
-                <div style="background: #FFF5F5; border-left: 3px solid #8B0000;
-                            border-radius: 8px; padding: 0.7rem 1rem;
-                            margin: 0.5rem 0 1rem 0; text-align: left;">
-                    <p style="margin: 0; font-size: 0.8rem; color: #8B0000; font-weight: 700;">
-                        👤 Bienvenue
-                    </p>
-                    <p style="margin: 0.3rem 0 0 0; font-size: 0.75rem; color: #666;">
-                        Sélectionnez votre profil ci-dessous
-                    </p>
-                </div>
+                <p style="margin: 0.3rem 0 0 0; font-size: 0.72rem; color: #666;">
+                    Sélectionnez votre profil ci-dessous
+                </p>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    # ========== DROITE : FOND ROUGE + EFFETS ==========
+    with col_right:
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #6B0000 0%, #8B0000 50%, #4A0000 100%);
+            border-radius: 16px;
+            height: 720px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        ">
+            <div style="
+                position: absolute; top: -20%; right: -20%;
+                width: 300px; height: 300px;
+                background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+                border-radius: 50%;
+            "></div>
+            <div style="
+                position: absolute; bottom: -30%; left: -30%;
+                width: 400px; height: 400px;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                border-radius: 50%;
+            "></div>
 
-    # ============ BOUTONS PROFILS (à droite) ============
-    col_spacer1, col_btn, col_spacer2 = st.columns([1.2, 1, 1])
+            <div style="position: relative; z-index: 2; color: white;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+                <h2 style="
+                    color: white;
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    margin: 0 0 0.5rem 0;
+                    letter-spacing: 1px;
+                ">
+                    Ensemble pour<br>
+                    des transactions<br>
+                    plus sûres
+                </h2>
+                <div style="
+                    width: 40px; height: 3px;
+                    background: white;
+                    border-radius: 2px;
+                    margin: 1rem auto 0 auto;
+                "></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    with col_btn:
+    # ========== BOUTONS PROFILS ==========
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    col_a, col_b, col_c = st.columns([1, 2, 1])
+
+    with col_b:
         st.markdown("### 👤 Sélectionnez votre profil")
 
-        col_a, col_b = st.columns(2)
+        c1, c2 = st.columns(2)
 
-        with col_a:
+        with c1:
             if st.button("👤  Banquier\n\nAccès complet",
                          use_container_width=True,
                          key="btn_banquier"):
@@ -473,7 +379,7 @@ def page_connexion():
                 log_connexion("recruteur@demo.tn", "Recruteur", "connexion")
                 st.rerun()
 
-        with col_b:
+        with c2:
             if st.button("🔍  Analyste\n\nLecture seule",
                          use_container_width=True,
                          key="btn_analyste"):
@@ -496,7 +402,6 @@ def page_connexion():
 
         st.markdown("---")
 
-        # Admin expander
         with st.expander("🔐 Connexion administrateur"):
             email_admin = st.text_input("Email administrateur",
                                          placeholder="admin@atb.com.tn",
