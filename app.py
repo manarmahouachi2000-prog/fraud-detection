@@ -361,8 +361,6 @@ def page_connexion():
             <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
                         background: linear-gradient(135deg, rgba(74,0,0,0.55) 0%, rgba(139,0,0,0.35) 100%);
                         z-index: 1;"></div>
-
-            <!-- Logo ATB en haut -->
             <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 1rem;">
                 <div style="background: white; padding: 8px 14px; border-radius: 6px;
                             font-weight: 800; color: #8B0000; font-size: 1.3rem;
@@ -374,8 +372,6 @@ def page_connexion():
                     ARAB TUNISIAN BANK
                 </div>
             </div>
-
-            <!-- Slogan en bas -->
             <div style="position: relative; z-index: 2; color: white;">
                 <div style="width: 40px; height: 3px; background: white;
                             margin-bottom: 1rem; border-radius: 2px;"></div>
@@ -402,8 +398,6 @@ def page_connexion():
                     align-items: center;
                     position: relative;
                     overflow: hidden;">
-
-            <!-- Effets lumineux -->
             <div style="position: absolute; top: -20%; right: -20%;
                         width: 400px; height: 400px;
                         background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
@@ -412,8 +406,6 @@ def page_connexion():
                         width: 500px; height: 500px;
                         background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
                         border-radius: 50%;"></div>
-
-            <!-- Carte blanche -->
             <div style="background: white; border-radius: 16px;
                         padding: 2rem; width: 100%; max-width: 400px;
                         box-shadow: 0 20px 60px rgba(0,0,0,0.4);
