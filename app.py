@@ -115,7 +115,7 @@ def verifier_banquier(email):
     return False, None
 
 def page_connexion():
-    """Page de connexion — sélection de profil."""
+    """Page de connexion — design moderne ATB."""
     try:
         with open("atb_background.jpg", "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
@@ -125,7 +125,7 @@ def page_connexion():
     st.markdown("""
     <style>
         .stApp {
-            background:
+            background: 
                 radial-gradient(circle at 20% 30%, #8B0000 0%, transparent 45%),
                 radial-gradient(circle at 80% 20%, #1D9E75 0%, transparent 45%),
                 radial-gradient(circle at 75% 80%, #6B0000 0%, transparent 45%),
@@ -135,12 +135,13 @@ def page_connexion():
         }
         header[data-testid="stHeader"] { background: transparent; }
         .login-wrapper {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
-            padding: 2rem 3rem 1rem 3rem;
+            padding: 2.5rem 3rem;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
-            max-width: 520px;
+            max-width: 480px;
             margin: 2rem auto 1rem auto;
             border: 1px solid rgba(255, 255, 255, 0.6);
         }
@@ -148,6 +149,7 @@ def page_connexion():
             display: block;
             margin: 0 auto 1.5rem auto;
             width: 130px;
+            height: auto;
         }
         .card-title {
             text-align: center;
@@ -161,41 +163,32 @@ def page_connexion():
             color: #666;
             font-size: 0.95rem;
             margin: 0 0 1rem 0;
+            font-weight: 500;
         }
         .card-divider {
             height: 3px;
             background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
+            border: none;
             border-radius: 2px;
             margin: 1.5rem 0;
             opacity: 0.7;
         }
-        .security-note {
-            text-align: center;
-            color: #888;
-            font-size: 0.82rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px dashed #ddd;
-        }
-        div[data-testid="stButton"] > button {
-            background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%);
+        .stButton > button {
+            width: 100%;
+            background: linear-gradient(90deg, #8B0000 0%, #6B0000 100%);
             color: white !important;
             font-weight: 600;
-            padding: 1.2rem 1rem;
+            padding: 0.9rem;
             border: none;
-            border-radius: 14px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 1.05rem;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.25);
-            min-height: 100px;
-            white-space: pre-line;
-            line-height: 1.4;
+            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.35);
         }
-        div[data-testid="stButton"] > button:hover {
-            transform: translateY(-3px);
-            background: linear-gradient(135deg, #6B0000 0%, #8B0000 100%);
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(90deg, #6B0000 0%, #8B0000 100%);
             box-shadow: 0 10px 30px rgba(139, 0, 0, 0.5);
-            color: white !important;
         }
         .stTextInput > div > div > input {
             border-radius: 12px !important;
@@ -204,10 +197,22 @@ def page_connexion():
             font-size: 1rem !important;
             background: white !important;
         }
+        .stTextInput > div > div > input:focus {
+            border-color: #8B0000 !important;
+            box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.12) !important;
+        }
+        .security-note {
+            text-align: center;
+            color: #888;
+            font-size: 0.82rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #ddd;
+        }
     </style>
     """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1, 1.8, 1])
+    col1, col2, col3 = st.columns([1, 1.6, 1])
     with col2:
         st.markdown(f"""
         <div class="login-wrapper">
@@ -218,74 +223,33 @@ def page_connexion():
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("### 👤 Sélectionnez votre profil")
+        st.markdown("**Saisissez votre adresse email professionnelle.**")
 
-        col_a, col_b = st.columns(2)
+        email = st.text_input("📧 Adresse email",
+                              placeholder="prenom.nom@atb.com.tn",
+                              key="login_email")
 
-        with col_a:
-            if st.button("👤  Banquier\n\nAccès complet",
-                         use_container_width=True,
-                         key="btn_banquier"):
-                st.session_state['logged_in'] = True
-                st.session_state['banquier_email'] = "banquier@atb.com.tn"
-                st.session_state['banquier_nom'] = "Banquier ATB"
-                st.session_state['role'] = "banquier"
-                log_connexion("banquier@atb.com.tn", "Banquier ATB", "connexion")
-                st.rerun()
-
-            if st.button("🎓  Recruteur\n\nMode démo",
-                         use_container_width=True,
-                         key="btn_recruteur"):
-                st.session_state['logged_in'] = True
-                st.session_state['banquier_email'] = "recruteur@demo.tn"
-                st.session_state['banquier_nom'] = "Recruteur"
-                st.session_state['role'] = "recruteur"
-                log_connexion("recruteur@demo.tn", "Recruteur", "connexion")
-                st.rerun()
-
-        with col_b:
-            if st.button("🔍  Analyste\n\nLecture seule",
-                         use_container_width=True,
-                         key="btn_analyste"):
-                st.session_state['logged_in'] = True
-                st.session_state['banquier_email'] = "analyste@atb.com.tn"
-                st.session_state['banquier_nom'] = "Analyste ATB"
-                st.session_state['role'] = "analyste"
-                log_connexion("analyste@atb.com.tn", "Analyste ATB", "connexion")
-                st.rerun()
-
-            if st.button("🎯  Démo rapide\n\nSans compte",
-                         use_container_width=True,
-                         key="btn_demo"):
-                st.session_state['logged_in'] = True
-                st.session_state['banquier_email'] = "demo@atb.com.tn"
-                st.session_state['banquier_nom'] = "Invité"
-                st.session_state['role'] = "demo"
-                log_connexion("demo@atb.com.tn", "Invité", "connexion")
-                st.rerun()
-
-        st.markdown(
-            '<p class="security-note">🔒 Connexion sécurisée · '
-            'Toutes les sessions sont enregistrées</p>',
-            unsafe_allow_html=True
-        )
-
-        with st.expander("🔐 Connexion administrateur"):
-            email_admin = st.text_input("Email administrateur",
-                                         placeholder="admin@atb.com.tn",
-                                         key="admin_email")
-            if st.button("Se connecter", use_container_width=True):
-                ok, nom = verifier_banquier(email_admin)
+        if st.button("🚀 Se connecter", use_container_width=True):
+            if not email or "@" not in email:
+                st.error("❌ Veuillez saisir une adresse email valide.")
+            else:
+                ok, nom = verifier_banquier(email)
                 if ok:
                     st.session_state['logged_in'] = True
-                    st.session_state['banquier_email'] = email_admin
+                    st.session_state['banquier_email'] = email
                     st.session_state['banquier_nom'] = nom
-                    st.session_state['role'] = "admin"
-                    log_connexion(email_admin, nom, "connexion")
+                    log_connexion(email, nom, "connexion")
                     st.success(f"✅ Bienvenue {nom} !")
+                    st.balloons()
                     st.rerun()
                 else:
                     st.error("❌ Accès refusé — Email non autorisé.")
+                    st.caption("Contactez votre administrateur.")
+
+        st.markdown(
+            '<p class="security-note">🔒 Connexion sécurisée · Toutes les tentatives sont enregistrées</p>',
+            unsafe_allow_html=True
+        )
 
 # ==============================================================
 # FEATURE ENGINEERING
@@ -345,16 +309,7 @@ except Exception:
 st.sidebar.title("🛡️ Détection de Fraude")
 st.sidebar.markdown("---")
 
-role = st.session_state.get('role', 'invite')
-role_icons = {
-    "banquier":  "👤 Banquier",
-    "analyste":  "🔍 Analyste",
-    "recruteur": "🎓 Recruteur",
-    "demo":      "🎯 Démo",
-    "admin":     "👑 Admin",
-}
-
-st.sidebar.success(f"{role_icons.get(role, '👤')} **{st.session_state.get('banquier_nom', 'Utilisateur')}**")
+st.sidebar.success(f"👤 **{st.session_state.get('banquier_nom', 'Utilisateur')}**")
 st.sidebar.caption(f"📧 {st.session_state.get('banquier_email', '')}")
 
 if st.sidebar.button("🚪 Se déconnecter", use_container_width=True):
@@ -393,7 +348,10 @@ st.sidebar.markdown("**F1-Score :** 0.94")
 st.sidebar.markdown("**AUC-ROC :** 0.9998")
 
 # ==============================================================
-# PAGE 1 — ACCUEIL (Style ATB)
+# PAGE 1 — ACCUEIL
+# ==============================================================
+# ==============================================================
+# PAGE 1 — ACCUEIL (Style Dashboard ATB)
 # ==============================================================
 if page == "🏠 Accueil":
     import plotly.graph_objects as go
@@ -401,31 +359,126 @@ if page == "🏠 Accueil":
     nom_banquier = st.session_state.get('banquier_nom', 'Utilisateur')
     date_now = datetime.now().strftime("%A %d %B %Y · %H:%M")
 
-    # BANNIÈRE PRINCIPALE
+    # CSS GLOBAL
+    st.markdown("""
+    <style>
+        section[data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #1a0000 0%, #2C0000 50%, #4A0000 100%);
+            border-right: 3px solid #8B0000;
+        }
+        section[data-testid="stSidebar"] * {
+            color: #FFFFFF !important;
+        }
+        section[data-testid="stSidebar"] .stButton > button {
+            background: rgba(255,255,255,0.08) !important;
+            color: white !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
+            text-align: left !important;
+        }
+        section[data-testid="stSidebar"] .stButton > button:hover {
+            background: #8B0000 !important;
+            border-color: #FFFFFF !important;
+        }
+        section[data-testid="stSidebar"] .stRadio > div { gap: 4px; }
+        section[data-testid="stSidebar"] .stRadio label {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: block;
+        }
+        section[data-testid="stSidebar"] .stRadio label:hover {
+            background: rgba(139,0,0,0.4);
+            border-left: 3px solid #FFFFFF;
+        }
+        .main { background: #F5F7FA; }
+        .block-container { padding-top: 1.5rem; padding-bottom: 1rem; }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #4A0000 0%, #8B0000 40%, #A6192E 70%, #6B0000 100%);
+            color: white;
+            padding: 2rem 2.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(139,0,0,0.3);
+        }
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%; right: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-title { font-size: 1.9rem; font-weight: 800; letter-spacing: 0.5px; margin: 0; color: #FFFFFF; }
+        .hero-subtitle { color: rgba(255,255,255,0.85); font-size: 0.85rem; letter-spacing: 3px; margin: 0.5rem 0 0 0; font-weight: 300; }
+        .hero-desc { color: rgba(255,255,255,0.9); font-size: 0.95rem; margin: 1rem 0 0 0; }
+        .hero-status {
+            display: flex; gap: 2rem;
+            margin-top: 1.2rem; padding-top: 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            font-size: 0.85rem; color: rgba(255,255,255,0.9);
+        }
+        .hero-shield { font-size: 3.5rem; filter: drop-shadow(0 0 20px rgba(255,255,255,0.4)); }
+
+        .kpi-card {
+            background: white; border-radius: 10px;
+            padding: 1.2rem 1.4rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #EEEEEE;
+            height: 100%; position: relative;
+        }
+        .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+        .kpi-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #666; }
+        .kpi-icon { font-size: 1.3rem; opacity: 0.5; }
+        .kpi-value { font-size: 2rem; font-weight: 800; margin: 0.3rem 0; color: #1a1a1a; }
+        .kpi-sub { font-size: 0.8rem; color: #999; margin: 0; }
+        .kpi-trend { display: inline-block; margin-top: 0.6rem; font-size: 0.75rem; font-weight: 600; color: #1D9E75; }
+        .kpi-card-dark { background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%); border: none; }
+        .kpi-card-dark .kpi-label, .kpi-card-dark .kpi-sub { color: rgba(255,255,255,0.75); }
+        .kpi-card-dark .kpi-value { color: #FFFFFF; }
+        .kpi-card-dark .kpi-icon { opacity: 0.8; }
+
+        .section-title { font-size: 1.05rem; font-weight: 700; color: #1a1a1a; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem; }
+
+        .panel { background: white; border-radius: 10px; padding: 1.4rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #EEEEEE; margin-bottom: 1rem; }
+
+        .activity-row { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
+        .activity-row:last-child { border-bottom: none; }
+        .activity-icon { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; margin-right: 0.7rem; flex-shrink: 0; }
+        .activity-icon-fraud { background: #FFE5E5; color: #8B0000; }
+        .activity-icon-ok { background: #E5F7EE; color: #1D9E75; }
+
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600; }
+        .badge-fraud { background: #8B0000; color: white; }
+        .badge-ok { background: #E5F7EE; color: #1D9E75; }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # BANNIÈRE HÉRO
     st.markdown(f"""
-    <div style="background: linear-gradient(135deg, #8B0000 0%, #A6192E 50%, #6B0000 100%);
-                color: white; padding: 2.5rem 3rem; border-radius: 4px;
-                margin-bottom: 2rem; border-left: 8px solid #FFFFFF;
-                box-shadow: 0 10px 40px rgba(139, 0, 0, 0.3);">
-        <div style="display: flex; align-items: center; gap: 1.5rem;">
-            <div style="font-size: 3.5rem;">🛡️</div>
-            <div>
-                <h1 style="margin: 0; color: white; font-size: 2.2rem;
-                           letter-spacing: 0.5px; font-weight: 700;">
-                    SYSTÈME DE DÉTECTION DE FRAUDE
-                </h1>
-                <p style="margin: 0.5rem 0 0 0; font-size: 1rem;
-                          color: rgba(255,255,255,0.85); letter-spacing: 2px;
-                          text-transform: uppercase; font-weight: 300;">
-                    Arab Tunisian Bank · Division Sécurité
+    <div class="hero-banner">
+        <div style="display: flex; align-items: center; gap: 1.5rem; position: relative; z-index: 2;">
+            <div class="hero-shield">🛡️</div>
+            <div style="flex: 1;">
+                <h1 class="hero-title">SYSTÈME DE DÉTECTION DE FRAUDE</h1>
+                <p class="hero-subtitle">ARAB TUNISIAN BANK · DIVISION SÉCURITÉ</p>
+                <p class="hero-desc">Des modèles avancés pour protéger vos transactions</p>
+            </div>
+            <div style="text-align: right; max-width: 220px;">
+                <p style="color: rgba(255,255,255,0.9); font-style: italic; margin: 0;">
+                    Prévenir aujourd'hui,<br>protéger demain
                 </p>
             </div>
         </div>
-        <div style="margin-top: 1.5rem; padding-top: 1.5rem;
-                    border-top: 1px solid rgba(255,255,255,0.2);">
-            <p style="margin: 0; font-size: 1rem; color: rgba(255,255,255,0.95);">
-                👤 <b>{nom_banquier}</b> &nbsp;·&nbsp; 📅 {date_now}
-            </p>
+        <div class="hero-status">
+            <span>🟢 Système opérationnel</span>
+            <span>📅 {date_now}</span>
+            <span>👤 {nom_banquier}</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -435,249 +488,218 @@ if page == "🏠 Accueil":
 
     with col1:
         st.markdown("""
-        <div style="background: #FFFFFF; padding: 1.5rem; border-radius: 4px;
-                    border-top: 4px solid #8B0000;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.08); height: 100%;">
-            <p style="margin: 0; color: #8B0000; font-size: 0.75rem;
-                      letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
-                DATASET
-            </p>
-            <h2 style="margin: 0.5rem 0; color: #2C2C2C; font-size: 2.2rem;
-                       font-weight: 700;">6.3M</h2>
-            <p style="margin: 0; color: #888; font-size: 0.85rem;">transactions analysées</p>
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span class="kpi-label">📊 DATASET</span>
+                <span class="kpi-icon">⋯</span>
+            </div>
+            <div class="kpi-value">6.3M</div>
+            <p class="kpi-sub">transactions analysées</p>
+            <span class="kpi-trend">↑ +12% vs hier</span>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        <div style="background: #FFFFFF; padding: 1.5rem; border-radius: 4px;
-                    border-top: 4px solid #A6192E;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.08); height: 100%;">
-            <p style="margin: 0; color: #A6192E; font-size: 0.75rem;
-                      letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
-                F1-SCORE
-            </p>
-            <h2 style="margin: 0.5rem 0; color: #2C2C2C; font-size: 2.2rem;
-                       font-weight: 700;">0.94</h2>
-            <p style="margin: 0; color: #888; font-size: 0.85rem;">vs baseline 0.07</p>
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span class="kpi-label">🎯 F1-SCORE</span>
+                <span class="kpi-icon">⋯</span>
+            </div>
+            <div class="kpi-value" style="color: #8B0000;">0.94</div>
+            <p class="kpi-sub">vs baseline 0.07</p>
+            <span class="kpi-trend">↑ +0.03</span>
         </div>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown("""
-        <div style="background: #FFFFFF; padding: 1.5rem; border-radius: 4px;
-                    border-top: 4px solid #2C2C2C;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.08); height: 100%;">
-            <p style="margin: 0; color: #2C2C2C; font-size: 0.75rem;
-                      letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
-                AUC-ROC
-            </p>
-            <h2 style="margin: 0.5rem 0; color: #2C2C2C; font-size: 2.2rem;
-                       font-weight: 700;">0.9998</h2>
-            <p style="margin: 0; color: #888; font-size: 0.85rem;">quasi-parfait</p>
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span class="kpi-label">📈 AUC-ROC</span>
+                <span class="kpi-icon">⋯</span>
+            </div>
+            <div class="kpi-value">0.9998</div>
+            <p class="kpi-sub">quasi-parfait</p>
+            <span class="kpi-trend">↑ +0.0002</span>
         </div>
         """, unsafe_allow_html=True)
 
     with col4:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%);
-                    padding: 1.5rem; border-radius: 4px;
-                    box-shadow: 0 4px 15px rgba(139,0,0,0.3); height: 100%;">
-            <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.75rem;
-                      letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
-                DÉTECTION
-            </p>
-            <h2 style="margin: 0.5rem 0; color: #FFFFFF; font-size: 2.2rem;
-                       font-weight: 700;">99.8%</h2>
-            <p style="margin: 0; color: rgba(255,255,255,0.75); font-size: 0.85rem;">des fraudes</p>
+        <div class="kpi-card kpi-card-dark">
+            <div class="kpi-header">
+                <span class="kpi-label">🛡️ DÉTECTION</span>
+                <span class="kpi-icon">⋯</span>
+            </div>
+            <div class="kpi-value">99.8%</div>
+            <p class="kpi-sub">des fraudes détectées</p>
+            <span class="kpi-trend" style="color: rgba(255,255,255,0.9);">🎯 Taux de précision du modèle</span>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # MODÈLE + RÉPARTITION
-    col_left, col_right = st.columns(2)
+    # MODÈLE + RÉPARTITION + ACTIVITÉ
+    col_left, col_mid, col_right = st.columns([1.5, 1, 1])
 
     with col_left:
         st.markdown("""
-        <h3 style="color: #8B0000; border-bottom: 2px solid #8B0000;
-                   padding-bottom: 0.5rem; margin-bottom: 1rem;">
-            🏆 MODÈLE CHAMPION
-        </h3>
-        """, unsafe_allow_html=True)
-
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%);
-                    color: white; padding: 2rem; border-radius: 4px;
-                    border-left: 6px solid #FFFFFF;
-                    box-shadow: 0 10px 30px rgba(139,0,0,0.3);">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <span style="font-size: 2.5rem;">🌲</span>
-                <div>
-                    <h2 style="color: white; margin: 0; font-size: 1.6rem;
-                               font-weight: 700;">Random Forest</h2>
-                    <p style="color: rgba(255,255,255,0.7); margin: 0;
-                              font-size: 0.85rem; letter-spacing: 1px;">
-                        MEILLEUR PARMI 5 MODÈLES TESTÉS
-                    </p>
-                </div>
-            </div>
-            <table style="width: 100%; color: white; margin-top: 1rem;">
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.15);">
-                    <td style="padding: 0.6rem 0;">F1-Score</td>
-                    <td style="text-align:right; padding: 0.6rem 0;">
-                        <b style="font-size: 1.1rem;">0.94</b>
-                    </td>
-                </tr>
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.15);">
-                    <td style="padding: 0.6rem 0;">AUC-ROC</td>
-                    <td style="text-align:right; padding: 0.6rem 0;">
-                        <b style="font-size: 1.1rem;">0.9998</b>
-                    </td>
-                </tr>
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.15);">
-                    <td style="padding: 0.6rem 0;">Recall</td>
-                    <td style="text-align:right; padding: 0.6rem 0;">
-                        <b style="font-size: 1.1rem;">100%</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding: 0.6rem 0;">Precision</td>
-                    <td style="text-align:right; padding: 0.6rem 0;">
-                        <b style="font-size: 1.1rem;">90%</b>
-                    </td>
-                </tr>
-            </table>
+        <div class="section-title">
+            🏆 Modèle Champion
+            <span style="background: #FFE5E5; color: #8B0000; padding: 2px 10px;
+                         border-radius: 12px; font-size: 0.7rem; font-weight: 700;">
+                ✨ Random Forest
+            </span>
         </div>
         """, unsafe_allow_html=True)
 
-    with col_right:
         st.markdown("""
-        <h3 style="color: #8B0000; border-bottom: 2px solid #8B0000;
-                   padding-bottom: 0.5rem; margin-bottom: 1rem;">
-            📊 RÉPARTITION DU DATASET
-        </h3>
-        """, unsafe_allow_html=True)
-
-        fig = go.Figure(data=[go.Pie(
-            labels=['✅ Légitimes', '🚨 Fraudes'],
-            values=[6354407, 8213],
-            hole=0.65,
-            marker=dict(colors=['#2C2C2C', '#8B0000'],
-                        line=dict(color='#FFFFFF', width=2)),
-            textinfo='label+percent',
-            textfont=dict(size=13, family="Arial"),
-            hovertemplate='<b>%{label}</b><br>%{value:,} transactions<br>%{percent}<extra></extra>'
-        )])
-
-        fig.update_layout(
-            height=320,
-            margin=dict(t=20, b=20, l=20, r=20),
-            showlegend=True,
-            legend=dict(orientation="h", yanchor="bottom", y=-0.1,
-                        xanchor="center", x=0.5),
-            annotations=[dict(
-                text='<b style="color:#8B0000;">0.13%</b><br>'
-                     '<span style="font-size:10px;">fraudes</span>',
-                x=0.5, y=0.5, font_size=18, showarrow=False
-            )],
-            paper_bgcolor='white',
-            plot_bgcolor='white'
-        )
-        st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("---")
-
-    # TOP 5 FEATURES
-    st.markdown("""
-    <h3 style="color: #8B0000; border-bottom: 2px solid #8B0000;
-               padding-bottom: 0.5rem; margin-bottom: 1rem;">
-        📊 TOP 5 FEATURES IMPORTANTES
-    </h3>
-    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
-        Ces variables contribuent le plus à la détection des fraudes
-    </p>
-    """, unsafe_allow_html=True)
-
-    features = ['errorBalanceOrig', 'amountRatio', 'newbalanceOrig',
-                'nb_tx_step', 'amount']
-    importances = [0.349, 0.253, 0.134, 0.075, 0.050]
-    colors = ['#8B0000', '#A6192E', '#C42B47', '#D94545', '#E88B8B']
-
-    fig = go.Figure(go.Bar(
-        x=importances,
-        y=features,
-        orientation='h',
-        marker=dict(color=colors, line=dict(color='white', width=1)),
-        text=[f'{v*100:.1f}%' for v in importances],
-        textposition='outside',
-        textfont=dict(color='#2C2C2C', size=12, family="Arial"),
-        hovertemplate='<b>%{y}</b><br>Importance: %{x:.3f}<br>(%{text})<extra></extra>'
-    ))
-
-    fig.update_layout(
-        height=350,
-        margin=dict(t=20, b=20, l=20, r=60),
-        xaxis=dict(title='', showgrid=True, gridcolor='#eee',
-                   tickfont=dict(color='#2C2C2C')),
-        yaxis=dict(autorange='reversed',
-                   tickfont=dict(color='#2C2C2C', size=13)),
-        plot_bgcolor='white',
-        paper_bgcolor='white'
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("---")
-
-    # ACTIVITÉ RÉCENTE
-    st.markdown("""
-    <h3 style="color: #8B0000; border-bottom: 2px solid #8B0000;
-               padding-bottom: 0.5rem; margin-bottom: 1rem;">
-        📈 ACTIVITÉ RÉCENTE
-    </h3>
-    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
-        Les 5 dernières transactions analysées
-    </p>
-    """, unsafe_allow_html=True)
-
-    df_hist = get_history()
-
-    if df_hist.empty:
-        st.info("📭 Aucune transaction analysée pour le moment. "
-                "Commencez par la page 🔍 Analyser une transaction.")
-    else:
-        df_recent = df_hist.head(5).copy()
-        for _, row in df_recent.iterrows():
-            is_fraud = row['is_fraud'] == 1
-            color = '#8B0000' if is_fraud else '#2C2C2C'
-            bg = '#FFF5F5' if is_fraud else '#F8F8F8'
-            border = '#8B0000' if is_fraud else '#2C2C2C'
-            icon = '🚨' if is_fraud else '✅'
-            statut = 'FRAUDE' if is_fraud else 'LÉGITIME'
-
-            st.markdown(f"""
-            <div style="background: {bg}; padding: 1rem 1.5rem; border-radius: 4px;
-                        margin-bottom: 0.8rem; border-left: 5px solid {border};
-                        display: flex; justify-content: space-between;
-                        align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                <div>
-                    <b style="color: {color}; letter-spacing: 1px; font-size: 0.85rem;">
-                        {icon} {statut}
-                    </b>
-                    <span style="color: #666; margin-left: 1rem;">
-                        {row['transaction_type']}
-                    </span>
+        <div class="panel" style="padding: 0;">
+            <div style="display: flex; border-bottom: 1px solid #eee; padding: 0 1.4rem;">
+                <div style="padding: 0.8rem 0; border-bottom: 3px solid #8B0000; color: #8B0000;
+                            font-weight: 700; font-size: 0.85rem; margin-right: 1.5rem;">
+                    Performance globale
                 </div>
-                <div style="text-align: right;">
-                    <b style="color: #2C2C2C; font-size: 1.1rem;">
-                        {row['amount']:,.2f} €
-                    </b><br>
-                    <small style="color: #888;">
-                        {row['timestamp'][:16].replace('T', ' ')}
-                    </small>
+                <div style="padding: 0.8rem 0; color: #999; font-size: 0.85rem; margin-right: 1.5rem;">Matrice de confusion</div>
+                <div style="padding: 0.8rem 0; color: #999; font-size: 0.85rem; margin-right: 1.5rem;">Courbe ROC</div>
+                <div style="padding: 0.8rem 0; color: #999; font-size: 0.85rem;">Importance</div>
+            </div>
+            <div style="padding: 1.4rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <p style="margin: 0; font-size: 0.7rem; color: #999; text-transform: uppercase;">F1-Score</p>
+                        <p style="margin: 0.2rem 0; font-size: 1.5rem; font-weight: 800; color: #1a1a1a;">0.94</p>
+                        <p style="margin: 0; font-size: 0.7rem; color: #1D9E75;">↑ +0.03</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; font-size: 0.7rem; color: #999; text-transform: uppercase;">AUC-ROC</p>
+                        <p style="margin: 0.2rem 0; font-size: 1.5rem; font-weight: 800; color: #1a1a1a;">0.9998</p>
+                        <p style="margin: 0; font-size: 0.7rem; color: #1D9E75;">↑ +0.0002</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; font-size: 0.7rem; color: #999; text-transform: uppercase;">Précision</p>
+                        <p style="margin: 0.2rem 0; font-size: 1.5rem; font-weight: 800; color: #1a1a1a;">0.93</p>
+                        <p style="margin: 0; font-size: 0.7rem; color: #1D9E75;">↑ +0.02</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; font-size: 0.7rem; color: #999; text-transform: uppercase;">Rappel</p>
+                        <p style="margin: 0.2rem 0; font-size: 1.5rem; font-weight: 800; color: #1a1a1a;">0.96</p>
+                        <p style="margin: 0; font-size: 0.7rem; color: #1D9E75;">↑ +0.04</p>
+                    </div>
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8'],
+            y=[0.62, 0.71, 0.78, 0.83, 0.87, 0.90, 0.92, 0.94],
+            mode='lines+markers',
+            line=dict(color='#8B0000', width=3),
+            marker=dict(size=10, color='#8B0000', line=dict(color='white', width=2)),
+            fill='tozeroy', fillcolor='rgba(139,0,0,0.1)',
+            hovertemplate='<b>%{x}</b><br>F1: %{y:.2f}<extra></extra>'
+        ))
+        fig.update_layout(
+            height=220, margin=dict(t=10, b=10, l=10, r=10),
+            xaxis=dict(showgrid=False, tickfont=dict(size=11, color='#666')),
+            yaxis=dict(showgrid=True, gridcolor='#f0f0f0', tickfont=dict(size=11, color='#666'), range=[0.5, 1.0]),
+            plot_bgcolor='white', paper_bgcolor='white', showlegend=False
+        )
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+    with col_mid:
+        st.markdown('<div class="section-title">📊 Répartition du dataset</div>', unsafe_allow_html=True)
+
+        fig = go.Figure(data=[go.Pie(
+            labels=['Non fraudes', 'Fraudes'],
+            values=[6354407, 8213],
+            hole=0.7,
+            marker=dict(colors=['#2C2C2C', '#8B0000'], line=dict(color='white', width=2)),
+            textinfo='none',
+            hovertemplate='<b>%{label}</b><br>%{value:,} (%{percent})<extra></extra>'
+        )])
+        fig.update_layout(
+            height=230, margin=dict(t=10, b=10, l=10, r=10),
+            showlegend=True,
+            legend=dict(orientation="v", yanchor="middle", y=0.5, xanchor="left", x=1.0, font=dict(size=10)),
+            annotations=[
+                dict(text='<b style="font-size:16px;">6.3M</b><br>'
+                          '<span style="font-size:10px; color:#999;">transactions</span>',
+                     x=0.5, y=0.5, showarrow=False),
+                dict(text='<b>0.13%</b>', x=1.05, y=0.85, xref='paper', yref='paper', showarrow=False,
+                     font=dict(color='#8B0000', size=10)),
+                dict(text='<b>99.87%</b>', x=1.05, y=0.15, xref='paper', yref='paper', showarrow=False,
+                     font=dict(color='#2C2C2C', size=10))
+            ],
+            paper_bgcolor='white'
+        )
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+    with col_right:
+        st.markdown("""
+        <div class="section-title">
+            ⏱️ Activité récente
+            <a style="font-size: 0.75rem; color: #8B0000; margin-left: auto; text-decoration: none;">
+                Voir tout →
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="panel" style="padding: 1rem;">
+            <div class="activity-row">
+                <div style="display: flex; align-items: center; flex: 1;">
+                    <span class="activity-icon activity-icon-fraud">⚠️</span>
+                    <div>
+                        <div style="font-weight: 600; color: #1a1a1a; font-size: 0.85rem;">Transaction suspecte</div>
+                        <div style="color: #999; font-size: 0.75rem;">- 12 500 TND</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge badge-fraud">Fraude</span>
+                </div>
+            </div>
+            <div class="activity-row">
+                <div style="display: flex; align-items: center; flex: 1;">
+                    <span class="activity-icon activity-icon-ok">✅</span>
+                    <div>
+                        <div style="font-weight: 600; color: #1a1a1a; font-size: 0.85rem;">Paiement validé</div>
+                        <div style="color: #999; font-size: 0.75rem;">+ 3 200 TND</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge badge-ok">Légitime</span>
+                </div>
+            </div>
+            <div class="activity-row">
+                <div style="display: flex; align-items: center; flex: 1;">
+                    <span class="activity-icon activity-icon-fraud">🚫</span>
+                    <div>
+                        <div style="font-weight: 600; color: #1a1a1a; font-size: 0.85rem;">Fraude bloquée</div>
+                        <div style="color: #999; font-size: 0.75rem;">- 15 000 TND</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge badge-fraud">Fraude</span>
+                </div>
+            </div>
+            <div class="activity-row">
+                <div style="display: flex; align-items: center; flex: 1;">
+                    <span class="activity-icon activity-icon-ok">✅</span>
+                    <div>
+                        <div style="font-weight: 600; color: #1a1a1a; font-size: 0.85rem;">Paiement validé</div>
+                        <div style="color: #999; font-size: 0.75rem;">+ 4 500 TND</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge badge-ok">Légitime</span>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # ==============================================================
 # PAGE 2 — ANALYSER UNE TRANSACTION
