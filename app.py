@@ -115,139 +115,416 @@ def verifier_banquier(email):
     return False, None
 
 def page_connexion():
-    """Page de connexion — design moderne ATB."""
+    """Page de connexion — design ATB corporate."""
+    # Charger les 2 images (logo + bâtiment)
     try:
         with open("atb_background.jpg", "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
     except Exception:
         logo_b64 = ""
 
-    st.markdown("""
+    try:
+        with open("atb_building.jpg", "rb") as f:
+            building_b64 = base64.b64encode(f.read()).decode()
+    except Exception:
+        building_b64 = ""
+
+    # CSS + Design
+    st.markdown(f"""
     <style>
-        .stApp {
-            background: 
-                radial-gradient(circle at 20% 30%, #8B0000 0%, transparent 45%),
-                radial-gradient(circle at 80% 20%, #1D9E75 0%, transparent 45%),
-                radial-gradient(circle at 75% 80%, #6B0000 0%, transparent 45%),
-                radial-gradient(circle at 25% 75%, #0a5a3a 0%, transparent 45%),
-                linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            background-attachment: fixed;
-        }
-        header[data-testid="stHeader"] { background: transparent; }
-        .login-wrapper {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 2.5rem 3rem;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
-            max-width: 480px;
-            margin: 2rem auto 1rem auto;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-        }
-        .card-logo {
-            display: block;
-            margin: 0 auto 1.5rem auto;
-            width: 130px;
-            height: auto;
-        }
-        .card-title {
-            text-align: center;
+        /* Fond général */
+        .stApp {{
+            background: #F5F7FA;
+        }}
+        header[data-testid="stHeader"] {{ background: transparent; }}
+
+        /* Cacher la sidebar sur la page de connexion */
+        section[data-testid="stSidebar"] {{
+            display: none !important;
+        }}
+
+        /* Conteneur principal */
+        .login-container {{
+            display: flex;
+            min-height: 85vh;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            margin: 1rem 0;
+        }}
+
+        /* Côté gauche — Image du bâtiment */
+        .login-left {{
+            flex: 1.2;
+            background-image: url("data:image/jpeg;base64,{building_b64}");
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+        }}
+        .login-left::before {{
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(74,0,0,0.5) 0%, rgba(139,0,0,0.4) 100%);
+            z-index: 1;
+        }}
+        .login-left > * {{
+            position: relative;
+            z-index: 2;
+        }}
+        .atb-brand-left {{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }}
+        .atb-brand-logo {{
+            background: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 800;
             color: #8B0000;
-            font-size: 1.7rem;
-            font-weight: 700;
-            margin: 0 0 0.5rem 0;
-        }
-        .card-subtitle {
-            text-align: center;
-            color: #666;
-            font-size: 0.95rem;
-            margin: 0 0 1rem 0;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+        }}
+        .atb-brand-name {{
+            color: white;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
             font-weight: 500;
-        }
-        .card-divider {
+        }}
+        .login-left-bottom {{
+            color: white;
+        }}
+        .login-left-bottom p {{
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }}
+
+        /* Côté droit — Carte de connexion */
+        .login-right {{
+            flex: 1;
+            background: linear-gradient(135deg, #6B0000 0%, #8B0000 50%, #4A0000 100%);
+            padding: 3rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }}
+        .login-right::before {{
+            content: '';
+            position: absolute;
+            top: -20%; right: -20%;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }}
+        .login-right::after {{
+            content: '';
+            position: absolute;
+            bottom: -30%; left: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }}
+
+        /* Carte blanche centrale */
+        .login-card {{
+            background: white;
+            border-radius: 16px;
+            padding: 2rem 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }}
+        .login-card-logo {{
+            width: 100px;
+            margin: 0 auto 1rem auto;
+            display: block;
+        }}
+        .login-card-title {{
+            color: #8B0000;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: 0.5rem 0;
+            line-height: 1.3;
+        }}
+        .login-card-subtitle {{
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+        }}
+        .login-card-divider {{
+            width: 60px;
             height: 3px;
             background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
-            border: none;
             border-radius: 2px;
-            margin: 1.5rem 0;
-            opacity: 0.7;
-        }
-        .stButton > button {
-            width: 100%;
-            background: linear-gradient(90deg, #8B0000 0%, #6B0000 100%);
+            margin: 1rem auto;
+        }}
+        .login-card-hint {{
+            background: #FFF5F5;
+            border-left: 3px solid #8B0000;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin: 1rem 0;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #666;
+        }}
+
+        /* Boutons profils */
+        div[data-testid="stButton"] > button {{
+            width: 100% !important;
+            background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%) !important;
             color: white !important;
-            font-weight: 600;
-            padding: 0.9rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.35);
-        }
-        .stButton > button:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(90deg, #6B0000 0%, #8B0000 100%);
-            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.5);
-        }
-        .stTextInput > div > div > input {
-            border-radius: 12px !important;
+            font-weight: 600 !important;
+            padding: 0.9rem 1rem !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 0.9rem !important;
+            transition: all 0.2s !important;
+            box-shadow: 0 4px 12px rgba(139,0,0,0.3) !important;
+            white-space: pre-line !important;
+            line-height: 1.3 !important;
+            text-align: center !important;
+            margin-bottom: 0.5rem !important;
+        }}
+        div[data-testid="stButton"] > button:hover {{
+            transform: translateY(-2px) !important;
+            background: linear-gradient(135deg, #A6192E 0%, #8B0000 100%) !important;
+            box-shadow: 0 8px 20px rgba(139,0,0,0.5) !important;
+            color: white !important;
+        }}
+
+        /* Réduire l'espacement dans la carte */
+        .login-card div[data-testid="stVerticalBlock"] {{
+            gap: 0.5rem;
+        }}
+
+        /* Input admin */
+        .stTextInput > div > div > input {{
+            border-radius: 8px !important;
             border: 2px solid #e0e0e0 !important;
-            padding: 0.85rem 1rem !important;
-            font-size: 1rem !important;
-            background: white !important;
-        }
-        .stTextInput > div > div > input:focus {
+            padding: 0.7rem 1rem !important;
+            font-size: 0.9rem !important;
+        }}
+        .stTextInput > div > div > input:focus {{
             border-color: #8B0000 !important;
-            box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.12) !important;
-        }
-        .security-note {
-            text-align: center;
-            color: #888;
-            font-size: 0.82rem;
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px dashed #ddd;
-        }
+            box-shadow: 0 0 0 3px rgba(139,0,0,0.1) !important;
+        }}
+
+        /* Expander admin */
+        .streamlit-expanderHeader {{
+            background: #F8F8F8 !important;
+            border-radius: 8px !important;
+            font-size: 0.85rem !important;
+            color: #666 !important;
+        }}
+
+        /* Responsive */
+        @media (max-width: 900px) {{
+            .login-left {{ display: none; }}
+            .login-right {{ flex: 1; padding: 1.5rem; }}
+        }}
     </style>
     """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1, 1.6, 1])
-    with col2:
+    # Layout
+    st.markdown('<div class="login-container">', unsafe_allow_html=True)
+
+    col_left, col_right = st.columns([1.2, 1])
+
+    # ============ GAUCHE : IMAGE + SLOGAN ============
+    with col_left:
         st.markdown(f"""
-        <div class="login-wrapper">
-            <img src="data:image/jpeg;base64,{logo_b64}" class="card-logo" alt="ATB">
-            <h1 class="card-title">Système de Détection de Fraude</h1>
-            <p class="card-subtitle">Arab Tunisian Bank — Espace Sécurisé</p>
-            <hr class="card-divider">
+        <div style="background-image: url('data:image/jpeg;base64,{building_b64}');
+                    background-size: cover;
+                    background-position: center;
+                    height: 700px;
+                    border-radius: 20px 0 0 20px;
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 2rem;
+                    overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                        background: linear-gradient(135deg, rgba(74,0,0,0.55) 0%, rgba(139,0,0,0.35) 100%);
+                        z-index: 1;"></div>
+
+            <!-- Logo ATB en haut -->
+            <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 1rem;">
+                <div style="background: white; padding: 8px 14px; border-radius: 6px;
+                            font-weight: 800; color: #8B0000; font-size: 1.3rem;
+                            letter-spacing: 1px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    ATB
+                </div>
+                <div style="color: white; font-size: 0.7rem; letter-spacing: 2px;
+                            font-weight: 500; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+                    ARAB TUNISIAN BANK
+                </div>
+            </div>
+
+            <!-- Slogan en bas -->
+            <div style="position: relative; z-index: 2; color: white;">
+                <div style="width: 40px; height: 3px; background: white;
+                            margin-bottom: 1rem; border-radius: 2px;"></div>
+                <p style="margin: 0; font-size: 1.1rem; line-height: 1.5;
+                          font-weight: 500; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">
+                    Votre confiance<br>
+                    est notre plus grande<br>
+                    sécurité
+                </p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("**Saisissez votre adresse email professionnelle.**")
+    # ============ DROITE : CARTE DE CONNEXION ============
+    with col_right:
+        st.markdown(f"""
+        <div style="background: linear-gradient(135deg, #6B0000 0%, #8B0000 50%, #4A0000 100%);
+                    border-radius: 0 20px 20px 0;
+                    height: 700px;
+                    padding: 2rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    position: relative;
+                    overflow: hidden;">
 
-        email = st.text_input("📧 Adresse email",
-                              placeholder="prenom.nom@atb.com.tn",
-                              key="login_email")
+            <!-- Effets lumineux -->
+            <div style="position: absolute; top: -20%; right: -20%;
+                        width: 400px; height: 400px;
+                        background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+                        border-radius: 50%;"></div>
+            <div style="position: absolute; bottom: -30%; left: -20%;
+                        width: 500px; height: 500px;
+                        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+                        border-radius: 50%;"></div>
 
-        if st.button("🚀 Se connecter", use_container_width=True):
-            if not email or "@" not in email:
-                st.error("❌ Veuillez saisir une adresse email valide.")
-            else:
-                ok, nom = verifier_banquier(email)
+            <!-- Carte blanche -->
+            <div style="background: white; border-radius: 16px;
+                        padding: 2rem; width: 100%; max-width: 400px;
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+                        position: relative; z-index: 2;
+                        text-align: center;">
+
+                <img src="data:image/jpeg;base64,{logo_b64}"
+                     style="width: 90px; margin: 0 auto 0.5rem auto; display: block;">
+
+                <h1 style="color: #8B0000; font-size: 1.5rem; font-weight: 800;
+                           margin: 0.5rem 0; line-height: 1.3;">
+                    Système de<br>Détection de Fraude
+                </h1>
+
+                <p style="color: #888; font-size: 0.8rem; margin: 0.5rem 0 0 0;">
+                    Arab Tunisian Bank — Espace Sécurisé
+                </p>
+
+                <div style="width: 60px; height: 3px;
+                            background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
+                            border-radius: 2px; margin: 1.2rem auto;"></div>
+
+                <div style="background: #FFF5F5; border-left: 3px solid #8B0000;
+                            border-radius: 8px; padding: 0.7rem 1rem;
+                            margin: 0.5rem 0 1rem 0; text-align: left;">
+                    <p style="margin: 0; font-size: 0.8rem; color: #8B0000; font-weight: 700;">
+                        👤 Bienvenue
+                    </p>
+                    <p style="margin: 0.3rem 0 0 0; font-size: 0.75rem; color: #666;">
+                        Sélectionnez votre profil ci-dessous
+                    </p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ============ BOUTONS PROFILS (à droite) ============
+    col_spacer1, col_btn, col_spacer2 = st.columns([1.2, 1, 0])
+
+    with col_btn:
+        st.markdown("### 👤 Sélectionnez votre profil")
+
+        col_a, col_b = st.columns(2)
+
+        with col_a:
+            if st.button("👤  Banquier\n\nAccès complet",
+                         use_container_width=True,
+                         key="btn_banquier"):
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = "banquier@atb.com.tn"
+                st.session_state['banquier_nom'] = "Banquier ATB"
+                st.session_state['role'] = "banquier"
+                log_connexion("banquier@atb.com.tn", "Banquier ATB", "connexion")
+                st.rerun()
+
+            if st.button("🎓  Recruteur\n\nMode démo",
+                         use_container_width=True,
+                         key="btn_recruteur"):
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = "recruteur@demo.tn"
+                st.session_state['banquier_nom'] = "Recruteur"
+                st.session_state['role'] = "recruteur"
+                log_connexion("recruteur@demo.tn", "Recruteur", "connexion")
+                st.rerun()
+
+        with col_b:
+            if st.button("🔍  Analyste\n\nLecture seule",
+                         use_container_width=True,
+                         key="btn_analyste"):
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = "analyste@atb.com.tn"
+                st.session_state['banquier_nom'] = "Analyste ATB"
+                st.session_state['role'] = "analyste"
+                log_connexion("analyste@atb.com.tn", "Analyste ATB", "connexion")
+                st.rerun()
+
+            if st.button("🎯  Démo rapide\n\nSans compte",
+                         use_container_width=True,
+                         key="btn_demo"):
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = "demo@atb.com.tn"
+                st.session_state['banquier_nom'] = "Invité"
+                st.session_state['role'] = "demo"
+                log_connexion("demo@atb.com.tn", "Invité", "connexion")
+                st.rerun()
+
+        st.markdown("---")
+
+        # Admin expander
+        with st.expander("🔐 Connexion administrateur"):
+            email_admin = st.text_input("Email administrateur",
+                                         placeholder="admin@atb.com.tn",
+                                         key="admin_email")
+            if st.button("Se connecter", use_container_width=True):
+                ok, nom = verifier_banquier(email_admin)
                 if ok:
                     st.session_state['logged_in'] = True
-                    st.session_state['banquier_email'] = email
+                    st.session_state['banquier_email'] = email_admin
                     st.session_state['banquier_nom'] = nom
-                    log_connexion(email, nom, "connexion")
+                    st.session_state['role'] = "admin"
+                    log_connexion(email_admin, nom, "connexion")
                     st.success(f"✅ Bienvenue {nom} !")
-                    st.balloons()
                     st.rerun()
                 else:
                     st.error("❌ Accès refusé — Email non autorisé.")
-                    st.caption("Contactez votre administrateur.")
 
         st.markdown(
-            '<p class="security-note">🔒 Connexion sécurisée · Toutes les tentatives sont enregistrées</p>',
+            '<p style="text-align: center; color: #888; font-size: 0.75rem; '
+            'margin-top: 1rem;">🔒 Connexion sécurisée · Toutes les sessions sont enregistrées</p>',
             unsafe_allow_html=True
         )
 
