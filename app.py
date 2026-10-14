@@ -113,9 +113,8 @@ def verifier_banquier(email):
     if email in BANQUIERS_AUTORISES:
         return True, BANQUIERS_AUTORISES[email]
     return False, None
-
 def page_connexion():
-    """Page de connexion — design ATB corporate v2."""
+    """Page de connexion — design ATB corporate (version robuste)."""
     # Charger les images
     try:
         with open("atb_background.jpg", "rb") as f:
@@ -129,302 +128,169 @@ def page_connexion():
     except Exception:
         building_b64 = ""
 
-    # CSS global
-    st.markdown("""
-    <style>
-        .stApp { background: #F5F7FA; }
-        header[data-testid="stHeader"] { background: transparent; }
+    # CSS global simplifié
+    st.markdown(
+        """
+        <style>
+            section[data-testid="stSidebar"] { display: none !important; }
+            #MainMenu { visibility: hidden; }
+            footer { visibility: hidden; }
+            .stApp { background: #F5F7FA; }
+            header[data-testid="stHeader"] { background: transparent; }
+            
+            div[data-testid="stButton"] > button {
+                background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%) !important;
+                color: white !important;
+                font-weight: 600 !important;
+                border: none !important;
+                border-radius: 10px !important;
+                padding: 1rem !important;
+                box-shadow: 0 4px 12px rgba(139,0,0,0.3) !important;
+                white-space: pre-line !important;
+                line-height: 1.4 !important;
+            }
+            div[data-testid="stButton"] > button:hover {
+                transform: translateY(-2px) !important;
+                box-shadow: 0 8px 20px rgba(139,0,0,0.5) !important;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-        section[data-testid="stSidebar"] { display: none !important; }
+    # ============ LAYOUT EN 2 COLONNES ============
+    col_left, col_right = st.columns([1, 1])
 
-        /* Cacher complètement le menu Streamlit */
-        #MainMenu { visibility: hidden; }
-        footer { visibility: hidden; }
-
-        /* Boutons stylisés ATB */
-        div[data-testid="stButton"] > button {
-            width: 100% !important;
-            background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%) !important;
-            color: white !important;
-            font-weight: 600 !important;
-            padding: 0.9rem 1rem !important;
-            border: none !important;
-            border-radius: 10px !important;
-            font-size: 0.9rem !important;
-            transition: all 0.2s !important;
-            box-shadow: 0 4px 12px rgba(139,0,0,0.3) !important;
-            white-space: pre-line !important;
-            line-height: 1.3 !important;
-            text-align: center !important;
-            margin-bottom: 0.4rem !important;
-        }
-        div[data-testid="stButton"] > button:hover {
-            transform: translateY(-2px) !important;
-            background: linear-gradient(135deg, #A6192E 0%, #8B0000 100%) !important;
-            box-shadow: 0 8px 20px rgba(139,0,0,0.5) !important;
-            color: white !important;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Layout principal : 3 zones
-    col_left, col_center, col_right = st.columns([1.2, 1.8, 1.2])
-
-    # ========== GAUCHE : IMAGE BÂTIMENT + SLOGAN ==========
+    # ---------- GAUCHE : IMAGE BÂTIMENT ----------
     with col_left:
-        st.markdown(f"""
-        <div style="
-            background-image: linear-gradient(135deg, rgba(74,0,0,0.65) 0%, rgba(139,0,0,0.45) 100%),
-                              url('data:image/jpeg;base64,{building_b64}');
-            background-size: cover;
-            background-position: center;
-            height: 720px;
-            border-radius: 16px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        ">
-            <!-- Logo ATB en haut -->
-            <div style="display: flex; align-items: center; gap: 0.8rem;">
-                <div style="
-                    background: white;
-                    padding: 8px 14px;
-                    border-radius: 6px;
-                    font-weight: 900;
-                    color: #8B0000;
-                    font-size: 1.4rem;
-                    letter-spacing: 1px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-                ">ATB</div>
-                <div style="
-                    color: white;
-                    font-size: 0.7rem;
-                    letter-spacing: 2px;
-                    font-weight: 600;
-                    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-                ">ARAB TUNISIAN BANK</div>
-            </div>
+        if building_b64:
+            st.markdown(
+                f'<img src="data:image/jpeg;base64,{building_b64}" '
+                f'style="width:100%; height:600px; object-fit:cover; '
+                f'border-radius:16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">',
+                unsafe_allow_html=True
+            )
+        else:
+            st.warning("Image du bâtiment non disponible")
 
-            <!-- Slogan en bas -->
-            <div style="color: white;">
-                <div style="
-                    width: 45px; height: 3px;
-                    background: white;
-                    border-radius: 2px;
-                    margin-bottom: 1rem;
-                "></div>
-                <p style="
-                    margin: 0;
-                    font-size: 1.15rem;
-                    line-height: 1.5;
-                    font-weight: 500;
-                    text-shadow: 0 2px 10px rgba(0,0,0,0.7);
-                ">
-                    Votre confiance<br>
-                    est notre plus grande<br>
-                    sécurité
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # ========== CENTRE : CARTE DE CONNEXION ==========
-    with col_center:
-        st.markdown(f"""
-        <div style="
-            background: white;
-            border-radius: 16px;
-            padding: 2rem 1.8rem;
-            height: 720px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            text-align: center;
-        ">
-            <img src="data:image/jpeg;base64,{logo_b64}"
-                 style="width: 90px; margin-bottom: 0.5rem;">
-
-            <h1 style="
-                color: #8B0000;
-                font-size: 1.5rem;
-                font-weight: 800;
-                margin: 0.3rem 0;
-                line-height: 1.3;
-                font-family: Arial, sans-serif;
-            ">
-                Système de<br>Détection de Fraude
-            </h1>
-
-            <p style="
-                color: #888;
-                font-size: 0.75rem;
-                margin: 0.3rem 0 0.8rem 0;
-                font-family: Arial, sans-serif;
-            ">
-                Arab Tunisian Bank — Espace Sécurisé
-            </p>
-
-            <div style="
-                width: 60px;
-                height: 3px;
-                background: linear-gradient(90deg, #8B0000 0%, #1D9E75 100%);
-                border-radius: 2px;
-                margin: 0.5rem auto 1rem auto;
-            "></div>
-
-            <div style="
-                background: #FFF5F5;
-                border-left: 3px solid #8B0000;
-                border-radius: 8px;
-                padding: 0.7rem 1rem;
-                margin: 0.3rem 0 1.2rem 0;
-                width: 100%;
-                text-align: left;
-            ">
-                <p style="margin: 0; font-size: 0.8rem; color: #8B0000; font-weight: 700;">
-                    👤 Bienvenue
-                </p>
-                <p style="margin: 0.3rem 0 0 0; font-size: 0.72rem; color: #666;">
-                    Sélectionnez votre profil ci-dessous
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # ========== DROITE : FOND ROUGE + EFFETS ==========
+    # ---------- DROITE : CARTE DE CONNEXION ----------
     with col_right:
-        st.markdown(f"""
-        <div style="
-            background: linear-gradient(135deg, #6B0000 0%, #8B0000 50%, #4A0000 100%);
-            border-radius: 16px;
-            height: 720px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            position: relative;
-            overflow: hidden;
-        ">
-            <div style="
-                position: absolute; top: -20%; right: -20%;
-                width: 300px; height: 300px;
-                background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-                border-radius: 50%;
-            "></div>
-            <div style="
-                position: absolute; bottom: -30%; left: -30%;
-                width: 400px; height: 400px;
-                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-                border-radius: 50%;
-            "></div>
+        st.markdown("<br><br>", unsafe_allow_html=True)
 
-            <div style="position: relative; z-index: 2; color: white;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
-                <h2 style="
-                    color: white;
-                    font-size: 1.1rem;
-                    font-weight: 700;
-                    margin: 0 0 0.5rem 0;
-                    letter-spacing: 1px;
-                ">
-                    Ensemble pour<br>
-                    des transactions<br>
-                    plus sûres
-                </h2>
-                <div style="
-                    width: 40px; height: 3px;
-                    background: white;
-                    border-radius: 2px;
-                    margin: 1rem auto 0 auto;
-                "></div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        # Logo ATB
+        if logo_b64:
+            col_logo1, col_logo2, col_logo3 = st.columns([1, 1, 1])
+            with col_logo2:
+                st.markdown(
+                    f'<img src="data:image/jpeg;base64,{logo_b64}" '
+                    f'style="width:100%; max-width:120px; display:block; margin:0 auto;">',
+                    unsafe_allow_html=True
+                )
 
-    # ========== BOUTONS PROFILS ==========
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    col_a, col_b, col_c = st.columns([1, 2, 1])
-
-    with col_b:
-        st.markdown("### 👤 Sélectionnez votre profil")
-
-        c1, c2 = st.columns(2)
-
-        with c1:
-            if st.button("👤  Banquier\n\nAccès complet",
-                         use_container_width=True,
-                         key="btn_banquier"):
-                st.session_state['logged_in'] = True
-                st.session_state['banquier_email'] = "banquier@atb.com.tn"
-                st.session_state['banquier_nom'] = "Banquier ATB"
-                st.session_state['role'] = "banquier"
-                log_connexion("banquier@atb.com.tn", "Banquier ATB", "connexion")
-                st.rerun()
-
-            if st.button("🎓  Recruteur\n\nMode démo",
-                         use_container_width=True,
-                         key="btn_recruteur"):
-                st.session_state['logged_in'] = True
-                st.session_state['banquier_email'] = "recruteur@demo.tn"
-                st.session_state['banquier_nom'] = "Recruteur"
-                st.session_state['role'] = "recruteur"
-                log_connexion("recruteur@demo.tn", "Recruteur", "connexion")
-                st.rerun()
-
-        with c2:
-            if st.button("🔍  Analyste\n\nLecture seule",
-                         use_container_width=True,
-                         key="btn_analyste"):
-                st.session_state['logged_in'] = True
-                st.session_state['banquier_email'] = "analyste@atb.com.tn"
-                st.session_state['banquier_nom'] = "Analyste ATB"
-                st.session_state['role'] = "analyste"
-                log_connexion("analyste@atb.com.tn", "Analyste ATB", "connexion")
-                st.rerun()
-
-            if st.button("🎯  Démo rapide\n\nSans compte",
-                         use_container_width=True,
-                         key="btn_demo"):
-                st.session_state['logged_in'] = True
-                st.session_state['banquier_email'] = "demo@atb.com.tn"
-                st.session_state['banquier_nom'] = "Invité"
-                st.session_state['role'] = "demo"
-                log_connexion("demo@atb.com.tn", "Invité", "connexion")
-                st.rerun()
-
-        st.markdown("---")
-
-        with st.expander("🔐 Connexion administrateur"):
-            email_admin = st.text_input("Email administrateur",
-                                         placeholder="admin@atb.com.tn",
-                                         key="admin_email")
-            if st.button("Se connecter", use_container_width=True):
-                ok, nom = verifier_banquier(email_admin)
-                if ok:
-                    st.session_state['logged_in'] = True
-                    st.session_state['banquier_email'] = email_admin
-                    st.session_state['banquier_nom'] = nom
-                    st.session_state['role'] = "admin"
-                    log_connexion(email_admin, nom, "connexion")
-                    st.success(f"✅ Bienvenue {nom} !")
-                    st.rerun()
-                else:
-                    st.error("❌ Accès refusé — Email non autorisé.")
-
+        # Titre
         st.markdown(
-            '<p style="text-align: center; color: #888; font-size: 0.75rem; '
-            'margin-top: 1rem;">🔒 Connexion sécurisée · Toutes les sessions sont enregistrées</p>',
+            '<h1 style="text-align:center; color:#8B0000; font-size:1.8rem; '
+            'font-weight:800; margin:1rem 0 0.5rem 0; font-family:Arial;">'
+            'Système de<br>Détection de Fraude</h1>',
             unsafe_allow_html=True
         )
 
+        # Sous-titre
+        st.markdown(
+            '<p style="text-align:center; color:#888; font-size:0.85rem; '
+            'margin:0 0 1rem 0;">Arab Tunisian Bank — Espace Sécurisé</p>',
+            unsafe_allow_html=True
+        )
+
+        # Séparateur
+        st.markdown(
+            '<div style="width:60px; height:3px; '
+            'background:linear-gradient(90deg,#8B0000 0%,#1D9E75 100%); '
+            'border-radius:2px; margin:1rem auto;"></div>',
+            unsafe_allow_html=True
+        )
+
+        # Bandeau Bienvenue
+        st.markdown(
+            '<div style="background:#FFF5F5; border-left:3px solid #8B0000; '
+            'border-radius:8px; padding:0.8rem 1rem; margin:1rem 0;">'
+            '<p style="margin:0; color:#8B0000; font-weight:700; font-size:0.85rem;">'
+            '👤 Bienvenue</p>'
+            '<p style="margin:0.3rem 0 0 0; color:#666; font-size:0.75rem;">'
+            'Sélectionnez votre profil ci-dessous</p></div>',
+            unsafe_allow_html=True
+        )
+
+    # ============ BOUTONS PROFILS EN PLEINE LARGEUR ============
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        '<h3 style="text-align:center; color:#333; margin-bottom:1rem;">'
+        '👤 Sélectionnez votre profil</h3>',
+        unsafe_allow_html=True
+    )
+
+    col_a, col_b = st.columns(2)
+
+    with col_a:
+        if st.button("👤  Banquier\n\nAccès complet",
+                     use_container_width=True,
+                     key="btn_banquier"):
+            st.session_state['logged_in'] = True
+            st.session_state['banquier_email'] = "banquier@atb.com.tn"
+            st.session_state['banquier_nom'] = "Banquier ATB"
+            st.session_state['role'] = "banquier"
+            log_connexion("banquier@atb.com.tn", "Banquier ATB", "connexion")
+            st.rerun()
+
+        if st.button("🎓  Recruteur\n\nMode démo",
+                     use_container_width=True,
+                     key="btn_recruteur"):
+            st.session_state['logged_in'] = True
+            st.session_state['banquier_email'] = "recruteur@demo.tn"
+            st.session_state['banquier_nom'] = "Recruteur"
+            st.session_state['role'] = "recruteur"
+            log_connexion("recruteur@demo.tn", "Recruteur", "connexion")
+            st.rerun()
+
+    with col_b:
+        if st.button("🔍  Analyste\n\nLecture seule",
+                     use_container_width=True,
+                     key="btn_analyste"):
+            st.session_state['logged_in'] = True
+            st.session_state['banquier_email'] = "analyste@atb.com.tn"
+            st.session_state['banquier_nom'] = "Analyste ATB"
+            st.session_state['role'] = "analyste"
+            log_connexion("analyste@atb.com.tn", "Analyste ATB", "connexion")
+            st.rerun()
+
+        if st.button("🎯  Démo rapide\n\nSans compte",
+                     use_container_width=True,
+                     key="btn_demo"):
+            st.session_state['logged_in'] = True
+            st.session_state['banquier_email'] = "demo@atb.com.tn"
+            st.session_state['banquier_nom'] = "Invité"
+            st.session_state['role'] = "demo"
+            log_connexion("demo@atb.com.tn", "Invité", "connexion")
+            st.rerun()
+
+    st.markdown("---")
+
+    with st.expander("🔐 Connexion administrateur"):
+        email_admin = st.text_input("Email administrateur",
+                                     placeholder="admin@atb.com.tn",
+                                     key="admin_email")
+        if st.button("Se connecter", use_container_width=True):
+            ok, nom = verifier_banquier(email_admin)
+            if ok:
+                st.session_state['logged_in'] = True
+                st.session_state['banquier_email'] = email_admin
+                st.session_state['banquier_nom'] = nom
+                st.session_state['role'] = "admin"
+                log_connexion(email_admin, nom, "connexion")
+                st.success(f"✅ Bienvenue {nom} !")
+                st.rerun()
+            else:
+                st.error("❌ Accès refusé — Email non autorisé.")
 # ==============================================================
 # FEATURE ENGINEERING
 # ==============================================================
